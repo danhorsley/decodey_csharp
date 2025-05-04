@@ -1,150 +1,134 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodel="clr-namespace:Decodey.ViewModels"
-             x:Class="Decodey.Views.SignupDialog"
-             x:DataType="viewmodel:SignupViewModel"
+             x:Class="Decodey.Views.Dialogs.SignupDialog"
              Title="Create Account">
+    <Grid Padding="20" RowSpacing="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-    <Grid BackgroundColor="{DynamicResource PageBackgroundColor}">
-        <ScrollView>
-            <VerticalStackLayout Spacing="16" Padding="24" MaximumWidthRequest="480" HorizontalOptions="Center">
-                <!-- Close button -->
-                <Button 
-                    Text="×"
-                    FontSize="24"
-                    HorizontalOptions="End"
-                    VerticalOptions="Start"
-                    WidthRequest="44"
-                    HeightRequest="44"
-                    Padding="0"
-                    Command="{Binding CloseCommand}"
-                    BackgroundColor="Transparent"
-                    TextColor="{DynamicResource PrimaryTextColor}"/>
+        <!-- Header -->
+        <StackLayout Grid.Row="0" Spacing="10">
+            <Label Text="Create an Account" 
+                   FontSize="24" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" />
+            <Label Text="Join Decodey to save your progress and compete on leaderboards" 
+                   HorizontalOptions="Center" 
+                   HorizontalTextAlignment="Center" />
+        </StackLayout>
 
-                <!-- Header -->
-                <Label 
-                    Text="Create Account"
-                    FontSize="28"
-                    FontAttributes="Bold"
-                    HorizontalOptions="Center" 
-                    Margin="0,0,0,12"
-                    TextColor="{DynamicResource PrimaryTextColor}"/>
+        <!-- Signup Form -->
+        <ScrollView Grid.Row="1">
+            <StackLayout Spacing="15">
+                <!-- Error message -->
+                <Frame IsVisible="{Binding HasError}" 
+                       BackgroundColor="#FFE6E6" 
+                       BorderColor="#FF8080" 
+                       Padding="10" 
+                       Margin="0,0,0,10">
+                    <Label Text="{Binding ErrorMessage}" 
+                           TextColor="#CC0000" />
+                </Frame>
 
-                <!-- Error message, if any -->
-                <Label 
-                    Text="{Binding ErrorMessage}"
-                    IsVisible="{Binding HasError}"
-                    TextColor="{DynamicResource DangerColor}"
-                    Margin="0,0,0,8"/>
+                <!-- Email -->
+                <StackLayout Spacing="5">
+                    <Label Text="Email" />
+                    <Frame Padding="10,0" HasShadow="False" BorderColor="#DDDDDD">
+                        <Entry Placeholder="Enter your email" 
+                               Text="{Binding Email}" 
+                               Keyboard="Email" 
+                               IsEnabled="{Binding IsNotBusy}" />
+                    </Frame>
+                </StackLayout>
 
-                <!-- Sign up form -->
-                <VerticalStackLayout Spacing="16" Margin="0,8,0,0">
-                    <!-- Email -->
-                    <VerticalStackLayout Spacing="4">
-                        <Label 
-                            Text="Email"
-                            TextColor="{DynamicResource PrimaryTextColor}"/>
-                        <Entry 
-                            Text="{Binding Email}" 
-                            Placeholder="Enter your email"
-                            Keyboard="Email"
-                            TextColor="{DynamicResource PrimaryTextColor}"
-                            BackgroundColor="{DynamicResource InputBackgroundColor}"/>
-                    </VerticalStackLayout>
+                <!-- Username -->
+                <StackLayout Spacing="5">
+                    <Label Text="Username" />
+                    <Frame Padding="10,0" HasShadow="False" BorderColor="#DDDDDD">
+                        <Entry Placeholder="Choose a username" 
+                               Text="{Binding Username}" 
+                               IsEnabled="{Binding IsNotBusy}" />
+                    </Frame>
+                    <!-- Username status message -->
+                    <Label Text="{Binding UsernameStatus}" 
+                           TextColor="{Binding UsernameColor}" 
+                           FontSize="12" 
+                           IsVisible="{Binding UsernameStatus, Converter={StaticResource StringNotEmptyConverter}}" />
+                </StackLayout>
 
-                    <!-- Username -->
-                    <VerticalStackLayout Spacing="4">
-                        <Label 
-                            Text="Username (for leaderboards)"
-                            TextColor="{DynamicResource PrimaryTextColor}"/>
-                        <Entry 
-                            Text="{Binding Username}" 
-                            Placeholder="Enter a username"
-                            TextColor="{Binding UsernameColor}"
-                            BackgroundColor="{DynamicResource InputBackgroundColor}"/>
+                <!-- Password -->
+                <StackLayout Spacing="5">
+                    <Label Text="Password" />
+                    <Frame Padding="10,0" HasShadow="False" BorderColor="#DDDDDD">
+                        <Entry Placeholder="Create a password" 
+                               Text="{Binding Password}" 
+                               IsPassword="True" 
+                               IsEnabled="{Binding IsNotBusy}" />
+                    </Frame>
+                </StackLayout>
 
-                        <!-- Username status -->
-                        <Label 
-                            Text="{Binding UsernameStatus}"
-                            IsVisible="{Binding UsernameStatus, Converter={StaticResource StringNotEmptyConverter}}"
-                            TextColor="{Binding UsernameColor}"
-                            FontSize="12"/>
-                    </VerticalStackLayout>
+                <!-- Confirm Password -->
+                <StackLayout Spacing="5">
+                    <Label Text="Confirm Password" />
+                    <Frame Padding="10,0" HasShadow="False" BorderColor="#DDDDDD">
+                        <Entry Placeholder="Confirm your password" 
+                               Text="{Binding ConfirmPassword}" 
+                               IsPassword="True" 
+                               IsEnabled="{Binding IsNotBusy}" />
+                    </Frame>
+                </StackLayout>
 
-                    <!-- Password -->
-                    <VerticalStackLayout Spacing="4">
-                        <Label 
-                            Text="Password"
-                            TextColor="{DynamicResource PrimaryTextColor}"/>
-                        <Entry 
-                            Text="{Binding Password}" 
-                            IsPassword="True"
-                            Placeholder="Enter your password"
-                            TextColor="{DynamicResource PrimaryTextColor}"
-                            BackgroundColor="{DynamicResource InputBackgroundColor}"/>
-                    </VerticalStackLayout>
+                <!-- Email Consent -->
+                <HorizontalStackLayout>
+                    <CheckBox IsChecked="{Binding EmailConsent}" 
+                              Color="#007BFF" 
+                              IsEnabled="{Binding IsNotBusy}" />
+                    <Label Text="I agree to receive updates and newsletters" 
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
 
-                    <!-- Confirm Password -->
-                    <VerticalStackLayout Spacing="4">
-                        <Label 
-                            Text="Confirm Password"
-                            TextColor="{DynamicResource PrimaryTextColor}"/>
-                        <Entry 
-                            Text="{Binding ConfirmPassword}" 
-                            IsPassword="True"
-                            Placeholder="Confirm your password"
-                            TextColor="{DynamicResource PrimaryTextColor}"
-                            BackgroundColor="{DynamicResource InputBackgroundColor}"/>
-                    </VerticalStackLayout>
-
-                    <!-- Email consent -->
-                    <VerticalStackLayout Spacing="8" Margin="0,8,0,0">
-                        <HorizontalStackLayout Spacing="8">
-                            <CheckBox IsChecked="{Binding EmailConsent}" Color="{DynamicResource PrimaryColor}"/>
-                            <Label 
-                                Text="I consent to receive occasional emails with game updates, news, and third-party offers."
-                                VerticalOptions="Center"
-                                TextColor="{DynamicResource PrimaryTextColor}"/>
-                        </HorizontalStackLayout>
-
-                        <Label 
-                            Text="This is the only way to support the game - we don't sell your data or show ads. You can unsubscribe at any time."
-                            FontSize="12"
-                            TextColor="{DynamicResource SecondaryTextColor}"
-                            Margin="32,0,0,0"/>
-                    </VerticalStackLayout>
-
-                    <!-- Create account button -->
-                    <Button 
-                        Text="{Binding SignupButtonText}"
-                        Command="{Binding SignupCommand}"
-                        IsEnabled="{Binding IsNotBusy}"
-                        BackgroundColor="{DynamicResource PrimaryColor}"
-                        TextColor="{DynamicResource OnPrimaryColor}"
-                        FontAttributes="Bold"
-                        Margin="0,12,0,0"/>
-
-                    <!-- Back to login -->
-                    <Button 
-                        Text="Back to Login" 
-                        Command="{Binding BackToLoginCommand}"
-                        BackgroundColor="Transparent"
-                        TextColor="{DynamicResource SecondaryColor}"
-                        Margin="0,8,0,0"/>
-                </VerticalStackLayout>
-            </VerticalStackLayout>
+                <!-- Signup Button -->
+                <Button Text="{Binding SignupButtonText}" 
+                        Command="{Binding SignupCommand}" 
+                        IsEnabled="{Binding IsNotBusy}" 
+                        HeightRequest="50" 
+                        Margin="0,10" 
+                        BackgroundColor="#007BFF" 
+                        TextColor="White" 
+                        CornerRadius="8" />
+            </StackLayout>
         </ScrollView>
 
-        <!-- Loading overlay -->
-        <Grid 
-            BackgroundColor="#80000000"
-            IsVisible="{Binding IsBusy}">
-            <ActivityIndicator 
-                IsRunning="{Binding IsBusy}"
-                Color="{DynamicResource PrimaryColor}"
-                WidthRequest="48"
-                HeightRequest="48"/>
-        </Grid>
+        <!-- Footer -->
+        <StackLayout Grid.Row="2" Spacing="15">
+            <!-- Login Link -->
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                <Label Text="Already have an account?" 
+                       VerticalOptions="Center" />
+                <Button Text="Login" 
+                        Command="{Binding BackToLoginCommand}" 
+                        IsEnabled="{Binding IsNotBusy}" 
+                        BackgroundColor="Transparent" 
+                        TextColor="#007BFF" 
+                        CornerRadius="0" 
+                        Padding="5,0" 
+                        FontSize="14" 
+                        VerticalOptions="Center" />
+            </StackLayout>
+
+            <!-- Close Button -->
+            <Button Text="Cancel" 
+                    Command="{Binding CloseCommand}" 
+                    IsEnabled="{Binding IsNotBusy}" 
+                    BackgroundColor="Transparent" 
+                    TextColor="#6C757D" 
+                    CornerRadius="8" 
+                    BorderColor="#6C757D" 
+                    BorderWidth="1" />
+        </StackLayout>
     </Grid>
 </ContentPage>

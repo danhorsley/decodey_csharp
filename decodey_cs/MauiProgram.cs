@@ -3,6 +3,7 @@ using Decodey.Services;
 using Decodey.ViewModels;
 using Decodey.Views;
 using Decodey.Converters;
+using System.Globalization;
 
 namespace Decodey;
 
@@ -22,14 +23,24 @@ public static class MauiProgram
         // Register services
         builder.Services.AddSingleton<ISettingsService, SettingsService>();
         builder.Services.AddSingleton<IGameService, GameService>();
+        builder.Services.AddSingleton<IAuthService, AuthService>();
+        builder.Services.AddSingleton<INavigationService, NavigationService>();
+        builder.Services.AddSingleton<ISoundService, SoundService>();
+        builder.Services.AddSingleton<IAnimationService, AnimationService>();
+        builder.Services.AddSingleton<IDialogService, DialogService>();
 
         // Register view models
         builder.Services.AddTransient<GameViewModel>();
         builder.Services.AddTransient<SettingsViewModel>();
+        builder.Services.AddTransient<LoginViewModel>();
+        builder.Services.AddTransient<SignupViewModel>();
 
         // Register pages
         builder.Services.AddTransient<GamePage>();
         builder.Services.AddTransient<AboutDialog>();
+        builder.Services.AddTransient<LoginDialog>();
+        builder.Services.AddTransient<SignupDialog>();
+        builder.Services.AddTransient<SettingsDialog>();
 
         // Configure app
         ConfigureResources(builder.Services);

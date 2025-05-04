@@ -1,5 +1,7 @@
-using Microsoft.Maui.Controls;
 using System;
+using System.Threading.Tasks;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.ApplicationModel.Communication;
 
 namespace Decodey.Views
 {
@@ -12,15 +14,33 @@ namespace Decodey.Views
 
         private async void OnScoringClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new ScoringPage());
+            try
+            {
+                // Navigate to scoring page
+                await Shell.Current.GoToAsync("scoring");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Navigation error: {ex.Message}");
+                await DisplayAlert("Error", "Could not navigate to Scoring page.", "OK");
+            }
         }
 
         private async void OnPrivacyClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new PrivacyPage());
+            try
+            {
+                // Navigate to privacy page
+                await Shell.Current.GoToAsync("privacy");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Navigation error: {ex.Message}");
+                await DisplayAlert("Error", "Could not navigate to Privacy page.", "OK");
+            }
         }
 
-        private void OnContactSupportClicked(object sender, EventArgs e)
+        private async void OnContactSupportClicked(object sender, EventArgs e)
         {
             // Open email client with support email
             try
@@ -29,20 +49,21 @@ namespace Decodey.Views
                 {
                     Subject = "Decodey Support Request",
                     Body = "",
-                    To = new List<string> { "support@uncryptgame.com" }
+                    To = new List<string> { "support@decodey.com" }
                 };
 
-                Email.ComposeAsync(message);
+                await Email.ComposeAsync(message);
             }
             catch (Exception ex)
             {
-                DisplayAlert("Error", "Could not open email client. Please email support@uncryptgame.com directly.", "OK");
                 Console.WriteLine($"Error launching email: {ex}");
+                await DisplayAlert("Error", "Could not open email client. Please email support@decodey.com directly.", "OK");
             }
         }
 
         private async void OnCloseClicked(object sender, EventArgs e)
         {
+            // Close the dialog by popping the modal page
             await Navigation.PopModalAsync();
         }
     }

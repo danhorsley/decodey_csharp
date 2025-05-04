@@ -1,8 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
+using Decodey.Views;
 using Decodey.Views.Dialogs;
-using Decodey.Services;
+using Decodey.Models;
 
 namespace Decodey.Services
 {
@@ -40,11 +41,6 @@ namespace Decodey.Services
         /// Show the signup dialog
         /// </summary>
         Task<bool> ShowSignupDialog();
-
-        /// <summary>
-        /// Show the daily challenge completion dialog
-        /// </summary>
-        Task ShowDailyCompletedDialog(DailyCompletionData completionData);
 
         /// <summary>
         /// Show a dialog to prompt for continuing a game
@@ -112,7 +108,7 @@ namespace Decodey.Services
             var result = await dialog.GetResultAsync();
 
             // Close dialog if still open
-            if (dialog.Navigation.ModalStack.Contains(dialog))
+            if (dialog.Navigation?.ModalStack.Contains(dialog) == true)
             {
                 await Application.Current.MainPage.Navigation.PopModalAsync();
             }
@@ -135,24 +131,12 @@ namespace Decodey.Services
             var result = await dialog.GetResultAsync();
 
             // Close dialog if still open
-            if (dialog.Navigation.ModalStack.Contains(dialog))
+            if (dialog.Navigation?.ModalStack.Contains(dialog) == true)
             {
                 await Application.Current.MainPage.Navigation.PopModalAsync();
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Show the daily challenge completion dialog
-        /// </summary>
-        public async Task ShowDailyCompletedDialog(DailyCompletionData completionData)
-        {
-            // Create dialog
-            var dialog = new DailyCompletedDialog(completionData);
-
-            // Show dialog
-            await Application.Current.MainPage.Navigation.PushModalAsync(dialog);
         }
 
         /// <summary>

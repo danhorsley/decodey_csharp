@@ -128,6 +128,13 @@ namespace Decodey.Services
         {
             try
             {
+                // Check if file exists
+                if (!await FileSystem.AppPackageFileExistsAsync(resourcePath))
+                {
+                    Console.WriteLine($"Sound file not found: {resourcePath}");
+                    return;
+                }
+
                 // Get resource stream
                 using var stream = await FileSystem.OpenAppPackageFileAsync(resourcePath);
 

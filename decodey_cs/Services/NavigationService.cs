@@ -2,146 +2,107 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
+using Decodey.Views;
 
 namespace Decodey.Services
 {
-    /// <summary>
-    /// Interface for navigation service
-    /// </summary>
     public interface INavigationService
     {
-        /// <summary>
-        /// Navigate to a specified page by name
-        /// </summary>
-        Task NavigateToPage(string pageName, Dictionary<string, object> parameters = null);
-
-        /// <summary>
-        /// Navigate back to the previous page
-        /// </summary>
-        Task NavigateBack();
-
-        /// <summary>
-        /// Go to the home page
-        /// </summary>
-        Task GoToHome();
+        Task NavigateTo<T>(IDictionary<string, object> parameters = null) where T : Page;
+        Task GoBack();
     }
 
-    /// <summary>
-    /// Service for handling navigation between pages
-    /// </summary>
     public class NavigationService : INavigationService
     {
-        // Map of page names to page types
-        private readonly Dictionary<string, Type> _pageMap = new Dictionary<string, Type>
+        public async Task NavigateTo<T>(IDictionary<string, object> parameters = null) where T : Page
         {
-            { "HomePage", typeof(HomePage) },
-            { "GamePage", typeof(MainPage) },
-            { "LeaderboardPage", typeof(LeaderboardPage) },
-            { "PrivacyPage", typeof(PrivacyPage) },
-            { "ScoringPage", typeof(ScoringPage) }
-        };
-
-        /// <summary>
-        /// Navigate to a specified page by name
-        /// </summary>
-        public async Task NavigateToPage(string pageName, Dictionary<string, object> parameters = null)
-        {
-            // Check if page exists
-            if (!_pageMap.TryGetValue(pageName, out var pageType))
-            {
-                throw new ArgumentException($"Page '{pageName}' not found");
-            }
-
-            // Create page instance
-            var page = (Page)Activator.CreateInstance(pageType);
+            var page = Activator.CreateInstance<T>();
 
             // Set parameters if any
             if (parameters != null && page.BindingContext != null)
             {
                 foreach (var param in parameters)
                 {
-                    SetProperty(page.BindingContext, param.Key, param.Value);
+                    var property = page.BindingContext.GetType().GetProperty(param.Key);
+                    if (property != null && property.CanWrite)
+                    {
+                        property.SetValue(page.BindingContext, param.Value);
+                    }
                 }
             }
 
-            // Navigate to page
-            if (Application.Current.MainPage is NavigationPage navPage)
+            // Use Shell navigation if available
+            if (Shell.Current != null)
             {
-                await navPage.PushAsync(page);
-            }
-            else if (Application.Current.MainPage is Shell shell)
-            {
-                // Use Shell navigation if available
-                var route = GetRouteForPage(pageName);
-                if (!string.IsNullOrEmpty(route))
+                var routeForType = GetRouteForType(typeof(T));
+                if (!string.IsNullOrEmpty(routeForType))
                 {
-                    await Shell.Current.GoToAsync(route);
+                    await Shell.Current.GoToAsync(routeForType);
+                    return;
+                }
+            }
+
+            // Fallback to page navigation
+            var navigation = Application.Current?.MainPage?.Navigation;
+            if (navigation != null)
+            {
+                // Check if the page type is a dialog
+                if (typeof(T).Name.EndsWith("Dialog"))
+                {
+                    await navigation.PushModalAsync(page);
                 }
                 else
                 {
-                    // Fallback to setting page directly
-                    Application.Current.MainPage = new NavigationPage(page);
+                    await navigation.PushAsync(page);
                 }
             }
             else
             {
-                // Set as main page with navigation
+                // No navigation context available, just set as main page
                 Application.Current.MainPage = new NavigationPage(page);
             }
         }
 
-        /// <summary>
-        /// Navigate back to the previous page
-        /// </summary>
-        public async Task NavigateBack()
+        public async Task GoBack()
         {
-            if (Application.Current.MainPage is NavigationPage navPage)
-            {
-                await navPage.PopAsync();
-            }
-            else if (Application.Current.MainPage is Shell shell)
+            // Try Shell navigation first
+            if (Shell.Current != null)
             {
                 await Shell.Current.GoToAsync("..");
+                return;
             }
-        }
 
-        /// <summary>
-        /// Go to the home page
-        /// </summary>
-        public async Task GoToHome()
-        {
-            await NavigateToPage("HomePage");
-        }
-
-        /// <summary>
-        /// Helper to set a property on an object by name
-        /// </summary>
-        private void SetProperty(object obj, string propertyName, object value)
-        {
-            var property = obj.GetType().GetProperty(propertyName);
-            if (property != null && property.CanWrite)
+            // Fallback to page navigation
+            var navigation = Application.Current?.MainPage?.Navigation;
+            if (navigation != null && navigation.ModalStack.Count > 0)
             {
-                property.SetValue(obj, value);
+                await navigation.PopModalAsync();
+            }
+            else if (navigation != null && navigation.NavigationStack.Count > 1)
+            {
+                await navigation.PopAsync();
             }
         }
 
-        /// <summary>
-        /// Get the shell route for a page name
-        /// </summary>
-        private string GetRouteForPage(string pageName)
+        private string GetRouteForType(Type pageType)
         {
-            // Map page names to shell routes
-            switch (pageName)
-            {
-                case "HomePage":
-                    return "//home";
-                case "GamePage":
-                    return "//game";
-                case "LeaderboardPage":
-                    return "//leaderboard";
-                default:
-                    return string.Empty;
-            }
+            // Map page types to shell routes
+            if (pageType == typeof(GamePage))
+                return "//game";
+            else if (pageType == typeof(AboutDialog))
+                return "about";
+            else if (pageType == typeof(LoginDialog))
+                return "login";
+            else if (pageType == typeof(SignupDialog))
+                return "signup";
+            else if (pageType == typeof(PrivacyPage))
+                return "privacy";
+            else if (pageType == typeof(ScoringPage))
+                return "scoring";
+            else if (pageType == typeof(SettingsDialog))
+                return "settings";
+
+            return string.Empty;
         }
     }
 }

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Decodey.Views.Dialogs.SettingsDialog"
+             Title="Settings">
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="15"
+            Padding="20">
+
+            <Label 
+                Text="Settings"
+                FontSize="24"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                Margin="0,0,0,10" />
+
+            <!-- Theme section -->
+            <Frame BorderColor="LightGray" CornerRadius="6" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label 
+                        Text="Theme"
+                        FontAttributes="Bold"
+                        FontSize="18" />
+                    <RadioButton 
+                        Content="Light"
+                        IsChecked="{Binding Theme, Converter={StaticResource StringEqualityConverter}, ConverterParameter=light}"
+                        GroupName="theme"
+                        CheckedChanged="OnThemeRadioButtonCheckedChanged" />
+                    <RadioButton 
+                        Content="Dark"
+                        IsChecked="{Binding Theme, Converter={StaticResource StringEqualityConverter}, ConverterParameter=dark}"
+                        GroupName="theme"
+                        CheckedChanged="OnThemeRadioButtonCheckedChanged" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Difficulty section -->
+            <Frame BorderColor="LightGray" CornerRadius="6" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label 
+                        Text="Difficulty"
+                        FontAttributes="Bold"
+                        FontSize="18" />
+                    <RadioButton 
+                        Content="Easy (8 mistakes allowed)"
+                        IsChecked="{Binding Difficulty, Converter={StaticResource StringEqualityConverter}, ConverterParameter=easy}"
+                        GroupName="difficulty"
+                        CheckedChanged="OnDifficultyRadioButtonCheckedChanged" />
+                    <RadioButton 
+                        Content="Medium (5 mistakes allowed)"
+                        IsChecked="{Binding Difficulty, Converter={StaticResource StringEqualityConverter}, ConverterParameter=medium}"
+                        GroupName="difficulty"
+                        CheckedChanged="OnDifficultyRadioButtonCheckedChanged" />
+                    <RadioButton 
+                        Content="Hard (3 mistakes allowed)"
+                        IsChecked="{Binding Difficulty, Converter={StaticResource StringEqualityConverter}, ConverterParameter=hard}"
+                        GroupName="difficulty"
+                        CheckedChanged="OnDifficultyRadioButtonCheckedChanged" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Game options section -->
+            <Frame BorderColor="LightGray" CornerRadius="6" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label 
+                        Text="Game Options"
+                        FontAttributes="Bold"
+                        FontSize="18" />
+                    <HorizontalStackLayout>
+                        <CheckBox 
+                            IsChecked="{Binding HardcoreMode}"
+                            CheckedChanged="OnHardcoreModeCheckBoxCheckedChanged" />
+                        <Label 
+                            Text="Hardcore Mode (hide spaces and punctuation)"
+                            VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout>
+                        <CheckBox 
+                            IsChecked="{Binding LongText}"
+                            CheckedChanged="OnLongTextCheckBoxCheckedChanged" />
+                        <Label 
+                            Text="Long Quotes (more challenging)"
+                            VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Sound section -->
+            <Frame BorderColor="LightGray" CornerRadius="6" Padding="15">
+                <VerticalStackLayout Spacing="10">
+                    <Label 
+                        Text="Sound"
+                        FontAttributes="Bold"
+                        FontSize="18" />
+                    <HorizontalStackLayout>
+                        <CheckBox 
+                            IsChecked="{Binding SoundEnabled}"
+                            CheckedChanged="OnSoundEnabledCheckBoxCheckedChanged" />
+                        <Label 
+                            Text="Enable Sound Effects"
+                            VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <Label 
+                        Text="Volume"
+                        Margin="0,10,0,0" />
+                    <Slider 
+                        Minimum="0"
+                        Maximum="1"
+                        Value="{Binding SoundVolume}"
+                        ValueChanged="OnVolumeSliderValueChanged" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Buttons -->
+            <StackLayout 
+                Orientation="Horizontal"
+                HorizontalOptions="Center"
+                Spacing="20"
+                Margin="0,20,0,0">
+                <Button 
+                    Text="Save"
+                    BackgroundColor="Green"
+                    TextColor="White"
+                    Command="{Binding SaveSettingsCommand}" />
+                <Button 
+                    Text="Cancel"
+                    BackgroundColor="Gray"
+                    TextColor="White"
+                    Clicked="OnBackButtonPressed" />
+            </StackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
