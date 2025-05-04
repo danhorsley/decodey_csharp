@@ -4,29 +4,40 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Decodey
 {
     /// <summary>
-    /// Provides access to registered services
+    /// Static service provider for accessing services throughout the app
     /// </summary>
     public static class ServiceProvider
     {
+        private static IServiceProvider _serviceProvider;
+
         /// <summary>
-        /// Gets a service of the specified type
+        /// Initialize the service provider
+        /// </summary>
+        public static void Initialize(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
+        /// <summary>
+        /// Get a service of the specified type
         /// </summary>
         public static T GetService<T>() where T : class
         {
-            if (Application.Current?.MainPage?.Handler?.MauiContext == null)
+            if (_serviceProvider == null)
                 return null;
 
-            return Application.Current.MainPage.Handler.MauiContext.Services.GetService<T>();
+            return _serviceProvider.GetService<T>();
         }
 
         /// <summary>
-        /// Gets a required service of the specified type
+        /// Get a required service of the specified type (throws if not found)
         /// </summary>
         public static T GetRequiredService<T>() where T : class
         {
-            if (Application.Current?.MainPage?.Handler?.MauiContext == null)
-                throw new InvalidOperationException("Service provider is not available");
+            if (_serviceProvider == null)
+                throw new InvalidOperationException("ServiceProvider has not been initialized");
 
-            return Application.Current.MainPage.Handler.MauiContext.Services.GetRequiredService<T>();
+            return _serviceProvider.GetRequiredService<T>();
         }
     }
+}

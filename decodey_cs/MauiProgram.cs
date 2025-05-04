@@ -50,7 +50,12 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-        return builder.Build();
+        var app = builder.Build();
+
+        // Initialize service provider
+        ServiceProvider.Initialize(app.Services);
+
+        return app;
     }
 
     private static void ConfigureResources(IServiceCollection services)
@@ -61,6 +66,7 @@ public static class MauiProgram
         Application.Current.Resources.Add("FrequencyConverter", new FrequencyConverter());
         Application.Current.Resources.Add("RemainingMistakesConverter", new RemainingMistakesConverter());
         Application.Current.Resources.Add("StringNotEmptyConverter", new StringNotEmptyConverter());
+        Application.Current.Resources.Add("StringEqualityConverter", new StringEqualityConverter());
     }
 }
 

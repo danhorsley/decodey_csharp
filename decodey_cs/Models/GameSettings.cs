@@ -13,6 +13,7 @@ namespace Decodey.Models
         public bool VibrationEnabled { get; set; } = true;
         public bool BackdoorMode { get; set; } = false;
         public string MobileMode { get; set; } = "auto";
+        public bool TutorialCompleted { get; set; } = false;
 
         // Clone the settings
         public GameSettings Clone()
@@ -28,7 +29,8 @@ namespace Decodey.Models
                 SoundEnabled = this.SoundEnabled,
                 VibrationEnabled = this.VibrationEnabled,
                 BackdoorMode = this.BackdoorMode,
-                MobileMode = this.MobileMode
+                MobileMode = this.MobileMode,
+                TutorialCompleted = this.TutorialCompleted
             };
         }
     }

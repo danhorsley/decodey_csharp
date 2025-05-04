@@ -1,53 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Maui.Storage;
 using System.Text.Json;
-using System.IO;
+using Decodey.Models;
 
 namespace Decodey.Services
 {
-    /// <summary>
-    /// Interface for settings service
-    /// </summary>
-    public interface ISettingsService
-    {
-        /// <summary>
-        /// Get a setting value
-        /// </summary>
-        T GetSetting<T>(string key, T defaultValue = default);
-
-        /// <summary>
-        /// Set a setting value
-        /// </summary>
-        void SetSetting<T>(string key, T value);
-
-        /// <summary>
-        /// Get a setting value asynchronously
-        /// </summary>
-        Task<T> GetSettingAsync<T>(string key, T defaultValue = default);
-
-        /// <summary>
-        /// Set a setting value asynchronously
-        /// </summary>
-        Task SetSettingAsync<T>(string key, T value);
-
-        /// <summary>
-        /// Reset all settings to defaults
-        /// </summary>
-        Task ResetSettingsAsync();
-
-        /// <summary>
-        /// Export settings to a file
-        /// </summary>
-        Task<string> ExportSettingsAsync();
-
-        /// <summary>
-        /// Import settings from a file
-        /// </summary>
-        Task ImportSettingsAsync(string filePath);
-    }
-
     /// <summary>
     /// Service for managing application settings
     /// </summary>
@@ -76,9 +31,10 @@ namespace Decodey.Services
         // Settings loaded flag
         private bool _settingsLoaded = false;
 
-        /// <summary>
-        /// Constructor loads settings
-        /// </summary>
+        // Event for settings changed
+        public event EventHandler<SettingsChangedEventArgs> SettingsChanged;
+
+        // Constructor
         public SettingsService()
         {
             // Ensure settings are loaded
@@ -86,9 +42,61 @@ namespace Decodey.Services
         }
 
         /// <summary>
+        /// Gets the current settings
+        /// </summary>
+        public GameSettings GetSettings()
+        {
+            // Create settings object
+            var settings = new GameSettings
+            {
+                Theme = GetSetting<string>("theme", "light"),
+                Difficulty = GetSetting<string>("difficulty", "medium"),
+                LongText = GetSetting<bool>("long-text", false),
+                HardcoreMode = GetSetting<bool>("hardcore-mode", false),
+                GridSorting = GetSetting<string>("grid-sorting", "default"),
+                TextColor = GetSetting<string>("textColor", "default"),
+                SoundEnabled = GetSetting<bool>("sound-enabled", true),
+                VibrationEnabled = GetSetting<bool>("vibration-enabled", true),
+                BackdoorMode = GetSetting<bool>("backdoor-mode", false),
+                MobileMode = GetSetting<string>("mobile-mode", "auto"),
+                TutorialCompleted = GetSetting<bool>("tutorial-completed", false)
+            };
+
+            return settings;
+        }
+
+        /// <summary>
+        /// Saves the settings
+        /// </summary>
+        public void SaveSettings(GameSettings settings)
+        {
+            // Ensure settings are loaded
+            LoadSettings();
+
+            // Update settings
+            _settings["theme"] = settings.Theme;
+            _settings["difficulty"] = settings.Difficulty;
+            _settings["long-text"] = settings.LongText;
+            _settings["hardcore-mode"] = settings.HardcoreMode;
+            _settings["grid-sorting"] = settings.GridSorting;
+            _settings["textColor"] = settings.TextColor;
+            _settings["sound-enabled"] = settings.SoundEnabled;
+            _settings["vibration-enabled"] = settings.VibrationEnabled;
+            _settings["backdoor-mode"] = settings.BackdoorMode;
+            _settings["mobile-mode"] = settings.MobileMode;
+            _settings["tutorial-completed"] = settings.TutorialCompleted;
+
+            // Save settings
+            SaveSettings();
+
+            // Raise settings changed event
+            SettingsChanged?.Invoke(this, new SettingsChangedEventArgs { Settings = settings });
+        }
+
+        /// <summary>
         /// Get a setting value
         /// </summary>
-        public T GetSetting<T>(string key, T defaultValue = default)
+        private T GetSetting<T>(string key, T defaultValue = default)
         {
             // Ensure settings are loaded
             LoadSettings();
@@ -132,124 +140,6 @@ namespace Decodey.Services
         }
 
         /// <summary>
-        /// Set a setting value
-        /// </summary>
-        public void SetSetting<T>(string key, T value)
-        {
-            // Ensure settings are loaded
-            LoadSettings();
-
-            // Update setting
-            _settings[key] = value;
-
-            // Save settings
-            SaveSettings();
-        }
-
-        /// <summary>
-        /// Get a setting value asynchronously
-        /// </summary>
-        public async Task<T> GetSettingAsync<T>(string key, T defaultValue = default)
-        {
-            // Ensure settings are loaded
-            await LoadSettingsAsync();
-
-            // Get setting
-            return GetSetting<T>(key, defaultValue);
-        }
-
-        /// <summary>
-        /// Set a setting value asynchronously
-        /// </summary>
-        public async Task SetSettingAsync<T>(string key, T value)
-        {
-            // Ensure settings are loaded
-            await LoadSettingsAsync();
-
-            // Update setting
-            _settings[key] = value;
-
-            // Save settings
-            await SaveSettingsAsync();
-        }
-
-        /// <summary>
-        /// Reset all settings to defaults
-        /// </summary>
-        public async Task ResetSettingsAsync()
-        {
-            // Create new settings dictionary with defaults
-            _settings = new Dictionary<string, object>(_defaultSettings);
-
-            // Save settings
-            await SaveSettingsAsync();
-        }
-
-        /// <summary>
-        /// Export settings to a file
-        /// </summary>
-        public async Task<string> ExportSettingsAsync()
-        {
-            try
-            {
-                // Ensure settings are loaded
-                await LoadSettingsAsync();
-
-                // Create JSON string
-                var settingsJson = JsonSerializer.Serialize(_settings);
-
-                // Get cache directory
-                var cacheDir = FileSystem.CacheDirectory;
-                var filePath = Path.Combine(cacheDir, "decodey_settings.json");
-
-                // Write to file
-                await File.WriteAllTextAsync(filePath, settingsJson);
-
-                return filePath;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error exporting settings: {ex.Message}");
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Import settings from a file
-        /// </summary>
-        public async Task ImportSettingsAsync(string filePath)
-        {
-            try
-            {
-                // Read file
-                var settingsJson = await File.ReadAllTextAsync(filePath);
-
-                // Parse JSON
-                var importedSettings = JsonSerializer.Deserialize<Dictionary<string, object>>(settingsJson);
-
-                // Ensure all required settings exist
-                foreach (var defaultSetting in _defaultSettings)
-                {
-                    if (!importedSettings.ContainsKey(defaultSetting.Key))
-                    {
-                        importedSettings[defaultSetting.Key] = defaultSetting.Value;
-                    }
-                }
-
-                // Update settings
-                _settings = importedSettings;
-
-                // Save settings
-                await SaveSettingsAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error importing settings: {ex.Message}");
-                throw;
-            }
-        }
-
-        /// <summary>
         /// Load settings from preferences
         /// </summary>
         private void LoadSettings()
@@ -289,16 +179,6 @@ namespace Decodey.Services
         }
 
         /// <summary>
-        /// Load settings from preferences asynchronously
-        /// </summary>
-        private async Task LoadSettingsAsync()
-        {
-            if (_settingsLoaded) return;
-
-            await Task.Run(() => LoadSettings());
-        }
-
-        /// <summary>
         /// Save settings to preferences
         /// </summary>
         private void SaveSettings()
@@ -308,14 +188,6 @@ namespace Decodey.Services
 
             // Save to preferences
             Preferences.Set(SettingsKey, settingsJson);
-        }
-
-        /// <summary>
-        /// Save settings to preferences asynchronously
-        /// </summary>
-        private async Task SaveSettingsAsync()
-        {
-            await Task.Run(() => SaveSettings());
         }
 
         /// <summary>

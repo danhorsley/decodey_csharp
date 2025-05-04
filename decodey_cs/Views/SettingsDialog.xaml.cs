@@ -3,7 +3,7 @@ using Microsoft.Maui.Controls;
 using Decodey.ViewModels;
 using Decodey.Services;
 
-namespace Decodey.Views.Dialogs
+namespace Decodey.Views
 {
     public partial class SettingsDialog : ContentPage
     {
@@ -15,28 +15,32 @@ namespace Decodey.Views.Dialogs
             InitializeComponent();
 
             // Get view model
-            _viewModel = BindingContext as SettingsViewModel;
+            _viewModel = ServiceProvider.GetService<SettingsViewModel>();
+
+            if (_viewModel == null)
+            {
+                // Create a view model if not found from service provider
+                var settingsService = ServiceProvider.GetService<ISettingsService>();
+                var gameService = ServiceProvider.GetService<IGameService>();
+                _viewModel = new SettingsViewModel(settingsService, gameService);
+            }
+
+            BindingContext = _viewModel;
 
             // Get sound service
-            _soundService = App.GetService<ISoundService>();
-
-            // Subscribe to back button pressed event
-            BackButtonPressed += OnBackButtonPressed;
+            _soundService = ServiceProvider.GetService<ISoundService>();
         }
 
         protected override bool OnBackButtonPressed()
         {
+            // Save settings before closing
+            _viewModel.SaveSettingsCommand.Execute(null);
+
             // Close the dialog
             CloseDialog();
 
             // Don't propagate the event
             return true;
-        }
-
-        private void OnBackButtonPressed(object sender, EventArgs e)
-        {
-            // Close the dialog
-            CloseDialog();
         }
 
         private async void CloseDialog()
@@ -64,8 +68,8 @@ namespace Decodey.Views.Dialogs
             _viewModel.Theme = theme;
         }
 
-        // Text color radio button checked changed event
-        private void OnTextColorRadioButtonCheckedChanged(object sender, CheckedChangedEventArgs e)
+        // Difficulty radio button checked changed event
+        private void OnDifficultyRadioButtonCheckedChanged(object sender, CheckedChangedEventArgs e)
         {
             // Play click sound
             _soundService?.PlaySound(SoundType.Click);
@@ -76,24 +80,9 @@ namespace Decodey.Views.Dialogs
             // Get radio button
             RadioButton radioButton = sender as RadioButton;
 
-            // Update text color
-            string textColor = radioButton.Content.ToString();
-
-            // Map display name to value
-            switch (textColor)
-            {
-                case "Default":
-                    _viewModel.TextColor = "default";
-                    break;
-
-                case "Sci-Fi Blue":
-                    _viewModel.TextColor = "scifi-blue";
-                    break;
-
-                case "Retro Green":
-                    _viewModel.TextColor = "retro-green";
-                    break;
-            }
+            // Update difficulty
+            string difficulty = radioButton.Content.ToString().ToLower().Split(' ')[0];
+            _viewModel.Difficulty = difficulty;
         }
 
         // Grid sorting radio button checked changed event
@@ -131,7 +120,7 @@ namespace Decodey.Views.Dialogs
             _soundService?.PlaySound(SoundType.Click);
 
             // Update hardcore mode
-            _viewModel.IsHardcoreMode = e.Value;
+            _viewModel.HardcoreMode = e.Value;
         }
 
         // Long text checkbox checked changed event
@@ -141,7 +130,7 @@ namespace Decodey.Views.Dialogs
             _soundService?.PlaySound(SoundType.Click);
 
             // Update long text
-            _viewModel.IsLongText = e.Value;
+            _viewModel.LongText = e.Value;
         }
 
         // Sound enabled checkbox checked changed event
@@ -154,7 +143,7 @@ namespace Decodey.Views.Dialogs
             }
 
             // Update sound enabled
-            _viewModel.IsSoundEnabled = e.Value;
+            _viewModel.SoundEnabled = e.Value;
         }
 
         // Volume slider value changed event
@@ -167,11 +156,21 @@ namespace Decodey.Views.Dialogs
             _soundService?.SetVolume((float)e.NewValue);
 
             // Play sound to test volume
-            if (e.NewValue > 0 && _viewModel.IsSoundEnabled &&
+            if (e.NewValue > 0 && _viewModel.SoundEnabled &&
                 Math.Abs(e.NewValue - e.OldValue) > 0.05)
             {
                 _soundService?.PlaySound(SoundType.Click);
             }
+        }
+
+        // Handle back button
+        public void OnBackButtonPressed(object sender, EventArgs e)
+        {
+            // Save settings before closing
+            _viewModel.SaveSettingsCommand.Execute(null);
+
+            // Close the dialog
+            CloseDialog();
         }
 
         #endregion
