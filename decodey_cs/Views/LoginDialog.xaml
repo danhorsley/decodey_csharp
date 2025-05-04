@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Decodey.ViewModels"
+             x:Class="Decodey.Views.LoginDialog"
+             x:DataType="viewmodel:LoginViewModel"
+             Title="Login">
+
+    <Grid BackgroundColor="{DynamicResource PageBackgroundColor}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="16" Padding="24" MaximumWidthRequest="480" HorizontalOptions="Center">
+                <!-- Close button -->
+                <Button 
+                    Text="×"
+                    FontSize="24"
+                    HorizontalOptions="End"
+                    VerticalOptions="Start"
+                    WidthRequest="44"
+                    HeightRequest="44"
+                    Padding="0"
+                    Command="{Binding CloseCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="{DynamicResource PrimaryTextColor}"/>
+
+                <!-- Header -->
+                <Label 
+                    Text="Login"
+                    FontSize="28"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" 
+                    Margin="0,0,0,12"
+                    TextColor="{DynamicResource PrimaryTextColor}"/>
+
+                <!-- Error message, if any -->
+                <Label 
+                    Text="{Binding ErrorMessage}"
+                    IsVisible="{Binding HasError}"
+                    TextColor="{DynamicResource DangerColor}"
+                    Margin="0,0,0,8"/>
+
+                <!-- Login form -->
+                <VerticalStackLayout Spacing="16" Margin="0,8,0,0">
+                    <!-- Username / Email -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label 
+                            Text="Username or Email"
+                            TextColor="{DynamicResource PrimaryTextColor}"/>
+                        <Entry 
+                            Text="{Binding Username}" 
+                            Placeholder="Enter your username or email"
+                            TextColor="{DynamicResource PrimaryTextColor}"
+                            BackgroundColor="{DynamicResource InputBackgroundColor}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Password -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label 
+                            Text="Password"
+                            TextColor="{DynamicResource PrimaryTextColor}"/>
+                        <Entry 
+                            Text="{Binding Password}" 
+                            IsPassword="True"
+                            Placeholder="Enter your password"
+                            TextColor="{DynamicResource PrimaryTextColor}"
+                            BackgroundColor="{DynamicResource InputBackgroundColor}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Remember me -->
+                    <HorizontalStackLayout Spacing="8" Margin="0,8,0,0">
+                        <CheckBox IsChecked="{Binding RememberMe}" Color="{DynamicResource PrimaryColor}"/>
+                        <Label 
+                            Text="Remember me"
+                            VerticalOptions="Center"
+                            TextColor="{DynamicResource PrimaryTextColor}"/>
+                    </HorizontalStackLayout>
+
+                    <!-- Login button -->
+                    <Button 
+                        Text="{Binding LoginButtonText}"
+                        Command="{Binding LoginCommand}"
+                        IsEnabled="{Binding IsNotBusy}"
+                        BackgroundColor="{DynamicResource PrimaryColor}"
+                        TextColor="{DynamicResource OnPrimaryColor}"
+                        FontAttributes="Bold"
+                        Margin="0,12,0,0"/>
+
+                    <!-- Forgot password and Create account -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16" Margin="0,12,0,0">
+                        <Button 
+                            Text="Forgot Password?" 
+                            Grid.Column="0"
+                            Command="{Binding ForgotPasswordCommand}"
+                            BackgroundColor="Transparent"
+                            TextColor="{DynamicResource SecondaryColor}"/>
+
+                        <Button 
+                            Text="Create Account" 
+                            Grid.Column="1"
+                            Command="{Binding CreateAccountCommand}"
+                            BackgroundColor="Transparent"
+                            TextColor="{DynamicResource SecondaryColor}"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Loading overlay -->
+        <Grid 
+            BackgroundColor="#80000000"
+            IsVisible="{Binding IsBusy}">
+            <ActivityIndicator 
+                IsRunning="{Binding IsBusy}"
+                Color="{DynamicResource PrimaryColor}"
+                WidthRequest="48"
+                HeightRequest="48"/>
+        </Grid>
+    </Grid>
+</ContentPage>
