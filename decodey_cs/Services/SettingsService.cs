@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Decodey.Models;
+using System.Diagnostics; // Add this line
 
 namespace Decodey.Services
 {
@@ -92,11 +93,4 @@ namespace Decodey.Services
         public event EventHandler<SettingsChangedEventArgs> SettingsChanged;
     }
 
-    /// <summary>
-    /// Event args for settings changed event
-    /// </summary>
-    public class SettingsChangedEventArgs : EventArgs
-    {
-        public GameSettings Settings { get; set; }
-    }
 }

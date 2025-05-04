@@ -1,92 +1,102 @@
-<? xml version = "1.0" encoding = "utf-8" ?>
-< ContentPage xmlns = "http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns: x = "http://schemas.microsoft.com/winfx/2009/xaml"
-             x: Class = "Decodey.Views.AboutDialog"
-             Title = "About" >
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Decodey.Views.AboutDialog"
+             Title="About">
+    <Grid BackgroundColor="{DynamicResource PageBackgroundColor}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="16" 
+                                 Padding="24" 
+                                 MaximumWidthRequest="600" 
+                                 HorizontalOptions="Center">
+                <!-- Header -->
+                <Label Text="decodey: What's the famous quote?!?"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       Margin="0,0,0,12"
+                       TextColor="{DynamicResource PrimaryTextColor}" />
 
+                <!-- Description -->
+                <Label Text="Crack the code by figuring out which letter stands for which in the well known quote."
+                       FontSize="16"
+                       HorizontalOptions="Center"
+                       TextColor="{DynamicResource SecondaryTextColor}"
+                       Margin="0,0,0,16" />
 
-    < Grid BackgroundColor = "{DynamicResource PageBackgroundColor}" >
-        < ScrollView >
-            < VerticalStackLayout Spacing = "16" Padding = "24" MaximumWidthRequest = "600" HorizontalOptions = "Center" >
-                < !--Header-- >
-                < Label
-                    Text = "decodey: What's the famous quote?!?"
-                    FontSize = "24"
-                    FontAttributes = "Bold"
-                    HorizontalOptions = "Center"
-                    Margin = "0,0,0,12"
-                    TextColor = "{DynamicResource PrimaryTextColor}" />
-
-                < !--Description-- >
-                < Label
-                    Text = "Crack the code by figuring out which letter stands for which in the well known quote."
-                    FontSize = "16"
-                    HorizontalOptions = "Center"
-                    TextColor = "{DynamicResource SecondaryTextColor}"
-                    Margin = "0,0,0,16" />
-
-                < !--How to play -->
-                <Frame BackgroundColor="{DynamicResource CardBackgroundColor}" CornerRadius="8" HasShadow="True" Padding="16">
+                <!-- How to play -->
+                <Frame BackgroundColor="{DynamicResource CardBackgroundColor}" 
+                       CornerRadius="8" 
+                       HasShadow="True" 
+                       Padding="16">
                     <VerticalStackLayout Spacing="12">
-                        <Label 
-                            Text="How to play:" 
-                            FontAttributes="Bold"
-                            FontSize="18"
-                            TextColor="{DynamicResource PrimaryTextColor}"/>
+                        <Label Text="How to play:" 
+                               FontAttributes="Bold"
+                               FontSize="18"
+                               TextColor="{DynamicResource PrimaryTextColor}" />
 
                         <VerticalStackLayout Spacing="8">
                             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                                <Label Text="1." Grid.Column="0" TextColor="{DynamicResource PrimaryTextColor}"/>
-                                <Label Text="Select a letter from the left grid" Grid.Column="1" TextColor="{DynamicResource PrimaryTextColor}"/>
+                                <Label Text="1." Grid.Column="0" TextColor="{DynamicResource PrimaryTextColor}" />
+                                <Label Text="Select a letter from the left grid" Grid.Column="1" TextColor="{DynamicResource PrimaryTextColor}" />
                             </Grid>
                             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                                <Label Text="2." Grid.Column="0" TextColor="{DynamicResource PrimaryTextColor}"/>
-                                <Label Text="Guess the original letter it represents in the right grid" Grid.Column="1" TextColor="{DynamicResource PrimaryTextColor}"/>
+                                <Label Text="2." Grid.Column="0" TextColor="{DynamicResource PrimaryTextColor}" />
+                                <Label Text="Guess the original letter it represents in the right grid" Grid.Column="1" TextColor="{DynamicResource PrimaryTextColor}" />
                             </Grid>
                             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                                <Label Text="3." Grid.Column="0" TextColor="{DynamicResource PrimaryTextColor}"/>
-                                <Label Text="Use the letter frequency numbers in the left grid to make smarter guesses" Grid.Column="1" TextColor="{DynamicResource PrimaryTextColor}"/>
+                                <Label Text="3." Grid.Column="0" TextColor="{DynamicResource PrimaryTextColor}" />
+                                <Label Text="Use the letter frequency numbers in the left grid to make smarter guesses" Grid.Column="1" TextColor="{DynamicResource PrimaryTextColor}" />
                             </Grid>
                             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                                <Label Text="4." Grid.Column="0" TextColor="{DynamicResource PrimaryTextColor}"/>
-                                <Label Text="Solve before running out of mistakes!" Grid.Column="1" TextColor="{DynamicResource PrimaryTextColor}"/>
+                                <Label Text="4." Grid.Column="0" TextColor="{DynamicResource PrimaryTextColor}" />
+                                <Label Text="Solve before running out of mistakes!" Grid.Column="1" TextColor="{DynamicResource PrimaryTextColor}" />
                             </Grid>
                         </VerticalStackLayout>
-                        
-                        <Label 
-                            Text="Stuck? Hit the hint button (but it'll cost you one mistake)."
-                            TextColor="{DynamicResource PrimaryTextColor}"/>
+
+                        <Label Text="Stuck? Hit the hint button (but it'll cost you one mistake)."
+                               TextColor="{DynamicResource PrimaryTextColor}" />
                     </VerticalStackLayout>
                 </Frame>
 
                 <!-- Footer with links -->
-                <Frame BackgroundColor="{DynamicResource CardBackgroundColor}" CornerRadius="8" HasShadow="True" Padding="16" Margin="0,16,0,0">
+                <Frame BackgroundColor="{DynamicResource CardBackgroundColor}" 
+                       CornerRadius="8" 
+                       HasShadow="True" 
+                       Padding="16" 
+                       Margin="0,16,0,0">
                     <VerticalStackLayout Spacing="16">
                         <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
-                            <Button Text="Scoring System" Clicked="OnScoringClicked" BackgroundColor="{DynamicResource SecondaryColor}"/>
-                            <Button Text="Privacy Policy" Clicked="OnPrivacyClicked" BackgroundColor="{DynamicResource SecondaryColor}"/>
+                            <Button Text="Scoring System" 
+                                    Clicked="OnScoringClicked" 
+                                    BackgroundColor="{DynamicResource SecondaryColor}" />
+                            <Button Text="Privacy Policy" 
+                                    Clicked="OnPrivacyClicked" 
+                                    BackgroundColor="{DynamicResource SecondaryColor}" />
                         </HorizontalStackLayout>
 
                         <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
-                            <Label Text="Having trouble? Need help?" HorizontalOptions="Center" TextColor="{DynamicResource SecondaryTextColor}"/>
-                            <Button Text="Contact Support" Clicked="OnContactSupportClicked" BackgroundColor="{DynamicResource PrimaryColor}"/>
+                            <Label Text="Having trouble? Need help?" 
+                                   HorizontalOptions="Center" 
+                                   TextColor="{DynamicResource SecondaryTextColor}" />
+                            <Button Text="Contact Support" 
+                                    Clicked="OnContactSupportClicked" 
+                                    BackgroundColor="{DynamicResource PrimaryColor}" />
                         </VerticalStackLayout>
 
-                        <Label 
-                            Text="Disclaimer: All quotes used in this game are attributed where known and are intended for educational and entertainment purposes only. No endorsement by the original authors or rights holders is implied."
-                            FontSize="12"
-                            TextColor="{DynamicResource TertiaryTextColor}"
-                            HorizontalOptions="Center"/>
+                        <Label Text="Disclaimer: All quotes used in this game are attributed where known and are intended for educational and entertainment purposes only. No endorsement by the original authors or rights holders is implied."
+                               FontSize="12"
+                               TextColor="{DynamicResource TertiaryTextColor}"
+                               HorizontalOptions="Center" />
                     </VerticalStackLayout>
                 </Frame>
 
                 <!-- Close button -->
-                <Button 
-                    Text="Return to Game"
-                    Clicked="OnCloseClicked"
-                    HorizontalOptions="Center"
-                    BackgroundColor="{DynamicResource PrimaryColor}"
-                    Margin="0,24,0,0"/>
+                <Button Text="Return to Game"
+                        Clicked="OnCloseClicked"
+                        HorizontalOptions="Center"
+                        BackgroundColor="{DynamicResource PrimaryColor}"
+                        Margin="0,24,0,0" />
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

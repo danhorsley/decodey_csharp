@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using Decodey.Views;
+using Decodey.Views.Dialogs; // Add this line
 
 namespace Decodey.Services
 {

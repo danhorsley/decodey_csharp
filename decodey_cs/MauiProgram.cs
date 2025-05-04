@@ -4,6 +4,7 @@ using Decodey.ViewModels;
 using Decodey.Views;
 using Decodey.Converters;
 using System.Globalization;
+using Decodey.Helpers; // Add this for StatusBar
 
 namespace Decodey;
 

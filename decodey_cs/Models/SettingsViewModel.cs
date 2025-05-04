@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Decodey.Models;
 using Decodey.Services;
+using Decodey.Helpers; // Add this line for StatusBar
 
 namespace Decodey.ViewModels
 {

@@ -115,25 +115,25 @@ namespace Decodey.Services
 
             // Create animation
             var flashAnimation = new Animation(v => element.BackgroundColor = new Color(
-                flashColor.Red * v + originalBackgroundColor.Red * (1 - v),
-                flashColor.Green * v + originalBackgroundColor.Green * (1 - v),
-                flashColor.Blue * v + originalBackgroundColor.Blue * (1 - v),
-                flashColor.Alpha * v + originalBackgroundColor.Alpha * (1 - v)
+                (float)(flashColor.Red * v + originalBackgroundColor.Red * (1 - v)),
+                (float)(flashColor.Green * v + originalBackgroundColor.Green * (1 - v)),
+                (float)(flashColor.Blue * v + originalBackgroundColor.Blue * (1 - v)),
+                (float)(flashColor.Alpha * v + originalBackgroundColor.Alpha * (1 - v))
             ));
 
             // Add keyframes
             flashAnimation.Add(0, 0.5, new Animation(v => element.BackgroundColor = new Color(
-                flashColor.Red * v + originalBackgroundColor.Red * (1 - v),
-                flashColor.Green * v + originalBackgroundColor.Green * (1 - v),
-                flashColor.Blue * v + originalBackgroundColor.Blue * (1 - v),
-                flashColor.Alpha * v + originalBackgroundColor.Alpha * (1 - v)
+                (float)(flashColor.Red * v + originalBackgroundColor.Red * (1 - v)),
+                (float)(flashColor.Green * v + originalBackgroundColor.Green * (1 - v)),
+                (float)(flashColor.Blue * v + originalBackgroundColor.Blue * (1 - v)),
+                (float)(flashColor.Alpha * v + originalBackgroundColor.Alpha * (1 - v))
             )));
 
             flashAnimation.Add(0.5, 1, new Animation(v => element.BackgroundColor = new Color(
-                flashColor.Red * (1 - v) + originalBackgroundColor.Red * v,
-                flashColor.Green * (1 - v) + originalBackgroundColor.Green * v,
-                flashColor.Blue * (1 - v) + originalBackgroundColor.Blue * v,
-                flashColor.Alpha * (1 - v) + originalBackgroundColor.Alpha * v
+                (float)(flashColor.Red * (1 - v) + originalBackgroundColor.Red * v),
+                (float)(flashColor.Green * (1 - v) + originalBackgroundColor.Green * v),
+                (float)(flashColor.Blue * (1 - v) + originalBackgroundColor.Blue * v),
+                (float)(flashColor.Alpha * (1 - v) + originalBackgroundColor.Alpha * v)
             )));
 
             // Create a task completion source
