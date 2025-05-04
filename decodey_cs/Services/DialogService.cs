@@ -74,8 +74,8 @@ namespace Decodey.Services
         /// </summary>
         public async Task ShowSettingsDialog()
         {
-            // Create dialog
-            var dialog = new SettingsDialog();
+            // Create dialog with fully qualified type name to avoid ambiguity
+            var dialog = new Decodey.Views.Dialogs.SettingsDialog();
 
             // Show dialog
             await Application.Current.MainPage.Navigation.PushModalAsync(dialog);

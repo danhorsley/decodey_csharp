@@ -1,10 +1,11 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Decodey.Models;
 using Decodey.Services;
-using Decodey.Helpers; // Add this line for StatusBar
+using System.Diagnostics; // Add this line for Debug class
 
 namespace Decodey.ViewModels
 {
@@ -279,19 +280,9 @@ namespace Decodey.ViewModels
                     mergedDictionaries.Add(new ResourceDictionary { Source = new Uri(themePath, UriKind.Relative) });
 
                     // Set system colors for mobile devices if needed
-                    if (DeviceInfo.Platform == DevicePlatform.iOS || DeviceInfo.Platform == DevicePlatform.Android)
-                    {
-                        var backgroundColor = Theme == "dark" ? Colors.Black : Colors.White;
-                        var statusBarColor = Theme == "dark" ? Colors.Black : Colors.White;
-                        var statusBarStyle = Theme == "dark" ? StatusBarStyle.LightContent : StatusBarStyle.DarkContent;
-
-                        // Set navigation bar color
-                        Microsoft.Maui.Controls.Application.Current.MainPage.BackgroundColor = backgroundColor;
-
-                        // Set status bar style
-                        StatusBar.SetStyle(statusBarStyle);
-                        StatusBar.SetColor(statusBarColor);
-                    }
+                    // This implementation only logs that we're skipping status bar updates
+                    // since the StatusBar API may not be available
+                    Console.WriteLine("StatusBar updates skipped - API not available");
                 });
             }
             catch (Exception ex)
@@ -340,8 +331,8 @@ namespace Decodey.ViewModels
         {
             get
             {
-                var authService = ServiceProvider.GetRequiredService<IAuthService>();
-                return authService.IsSubAdmin;
+                var authService = ServiceProvider.GetService<IAuthService>();
+                return authService?.IsSubAdmin ?? false;
             }
         }
     }

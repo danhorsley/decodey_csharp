@@ -165,18 +165,13 @@ namespace Decodey.Resources.Themes
         // Update system UI colors for Android/iOS status bars
         private void UpdateSystemColors()
         {
-            // Set status bar color based on theme
-            // This is platform specific and would need to be implemented per platform
-            Microsoft.Maui.ApplicationModel.StatusBar.SetStatusBarColor(
-                _currentTheme == ThemeType.Dark ?
-                    Colors.Black :
-                    Color.FromRgb(248, 249, 250));
+            // Platform-specific status bar color updates would go here
+            // This implementation is simplified to avoid using the StatusBar API
+            // You can re-enable this functionality by implementing platform-specific code
+            // or by adding a NuGet package that provides StatusBar functionality
 
-            // Set status bar style (light/dark text)
-            Microsoft.Maui.ApplicationModel.StatusBar.SetStatusBarStyle(
-                _currentTheme == ThemeType.Light ?
-                    Microsoft.Maui.ApplicationModel.StatusBarStyle.DarkContent :
-                    Microsoft.Maui.ApplicationModel.StatusBarStyle.LightContent);
+            // For now, just log that we're skipping this
+            Console.WriteLine("StatusBar updates skipped - API not available");
         }
 
         // Toggle between light and dark themes

@@ -81,12 +81,6 @@ namespace Decodey.ViewModels
         private bool _isMenuOpen;
 
         [ObservableProperty]
-        private bool _isTutorialActive;
-
-        [ObservableProperty]
-        private int _currentTutorialStep;
-
-        [ObservableProperty]
         private double _charFontSize = 20.0;
 
         #endregion
@@ -192,42 +186,13 @@ namespace Decodey.ViewModels
         }
 
         [RelayCommand]
-        private void StartTutorial()
-        {
-            IsTutorialActive = true;
-            CurrentTutorialStep = 0;
-        }
-
-        [RelayCommand]
-        private void NextTutorialStep()
-        {
-            CurrentTutorialStep++;
-
-            // End tutorial if we're at the last step
-            if (CurrentTutorialStep > 5)
-            {
-                EndTutorial();
-            }
-        }
-
-        [RelayCommand]
-        private void EndTutorial()
-        {
-            IsTutorialActive = false;
-
-            // Save that tutorial has been completed
-            var settings = _settingsService.GetSettings();
-            settings.TutorialCompleted = true;
-            _settingsService.SaveSettings(settings);
-        }
-
-        [RelayCommand]
-        private void NavigateToHome()
+        private async Task NavigateToHome()
         {
             // For now, just close celebrations and reset game
             ShowWinCelebration = false;
 
             // In a more sophisticated implementation, this would navigate to the home page
+            await Task.CompletedTask;
         }
 
         [RelayCommand]

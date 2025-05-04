@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using Decodey.Views;
-using Decodey.Views.Dialogs; // Add this line
+using Decodey.Views.Dialogs; // Keep this namespace import
 
 namespace Decodey.Services
 {
@@ -100,7 +100,8 @@ namespace Decodey.Services
                 return "privacy";
             else if (pageType == typeof(ScoringPage))
                 return "scoring";
-            else if (pageType == typeof(SettingsDialog))
+            // Use fully qualified name to avoid ambiguity
+            else if (pageType == typeof(Decodey.Views.Dialogs.SettingsDialog))
                 return "settings";
 
             return string.Empty;

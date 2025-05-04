@@ -2,11 +2,11 @@
 using Decodey.Services;
 using Decodey.ViewModels;
 using Decodey.Views;
+using Decodey.Views.Dialogs;
 using Decodey.Converters;
 using System.Globalization;
-using Decodey.Helpers; // Add this for StatusBar
 
-namespace Decodey;
+namespace Decodey;  // Changed from decodey_cs to Decodey
 
 public static class MauiProgram
 {
@@ -41,7 +41,7 @@ public static class MauiProgram
         builder.Services.AddTransient<AboutDialog>();
         builder.Services.AddTransient<LoginDialog>();
         builder.Services.AddTransient<SignupDialog>();
-        builder.Services.AddTransient<SettingsDialog>();
+        builder.Services.AddTransient<Decodey.Views.Dialogs.SettingsDialog>(); // Use fully qualified name
 
         // Configure app
         ConfigureResources(builder.Services);

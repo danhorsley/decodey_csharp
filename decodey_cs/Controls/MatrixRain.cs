@@ -1,568 +1,274 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
+﻿using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
-using Decodey.ViewModels;
-using Decodey.Controls;
-using Decodey.Services;
+using Microsoft.Maui.Layouts; // Add this for AbsoluteLayoutFlags
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Decodey
+namespace Decodey.Controls
 {
-    public partial class MainPage : ContentPage
+    public partial class MatrixRain : ContentView
     {
-        private readonly GameViewModel _viewModel;
-        private readonly AnimationService _animationService;
+        private Random _random = new Random();
+        private List<MatrixColumn> _columns = new List<MatrixColumn>();
+        private bool _isActive = false;
         private double _screenWidth;
         private double _screenHeight;
-        private double _previousWidth;
-        private double _previousHeight;
-        private DeviceOrientation _currentOrientation;
 
-        // Tutorial positions for various elements
-        private readonly string[] _tutorialTargets = {
-            "TextDisplay",
-            "EncryptedGrid",
-            "HintButtonFrame",
-            "GuessGrid"
-        };
+        // Bindable properties
+        public static readonly BindableProperty IsActiveProperty =
+            BindableProperty.Create(nameof(IsActive), typeof(bool), typeof(MatrixRain), false, propertyChanged: OnIsActiveChanged);
 
-        // Keep track of letters on the grid
-        private LetterCell[,] _encryptedCells;
-        private LetterCell[,] _guessCells;
+        public static readonly BindableProperty ColorProperty =
+            BindableProperty.Create(nameof(Color), typeof(Color), typeof(MatrixRain), Colors.Green);
 
-        public MainPage()
+        public static readonly BindableProperty MessageProperty =
+            BindableProperty.Create(nameof(Message), typeof(string), typeof(MatrixRain), string.Empty);
+
+        public static readonly BindableProperty DensityProperty =
+            BindableProperty.Create(nameof(Density), typeof(int), typeof(MatrixRain), 50);
+
+        public static readonly BindableProperty SpeedProperty =
+            BindableProperty.Create(nameof(Speed), typeof(double), typeof(MatrixRain), 1.0);
+
+        // Properties
+        public bool IsActive
+        {
+            get => (bool)GetValue(IsActiveProperty);
+            set => SetValue(IsActiveProperty, value);
+        }
+
+        public Color Color
+        {
+            get => (Color)GetValue(ColorProperty);
+            set => SetValue(ColorProperty, value);
+        }
+
+        public string Message
+        {
+            get => (string)GetValue(MessageProperty);
+            set => SetValue(MessageProperty, value);
+        }
+
+        public int Density
+        {
+            get => (int)GetValue(DensityProperty);
+            set => SetValue(DensityProperty, value);
+        }
+
+        public double Speed
+        {
+            get => (double)GetValue(SpeedProperty);
+            set => SetValue(SpeedProperty, value);
+        }
+
+        public MatrixRain()
         {
             InitializeComponent();
 
-            // Get the view model
-            _viewModel = BindingContext as GameViewModel;
-
-            // Initialize animation service
-            _animationService = App.GetService<IAnimationService>() ?? new AnimationService();
-
-            // Subscribe to view model events
-            SubscribeToViewModelEvents();
-
-            // Initialize menu animation
-            InitializeMenuAnimation();
-
-            // Size changed event
-            SizeChanged += OnSizeChanged;
+            // Subscribe to size changed event
+            SizeChanged += OnMatrixRainSizeChanged;
         }
 
-        private void SubscribeToViewModelEvents()
+        private static void OnIsActiveChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (_viewModel == null) return;
+            var control = (MatrixRain)bindable;
+            bool isActive = (bool)newValue;
 
-            // Layout updates
-            _viewModel.PropertyChanged += (s, e) =>
+            if (isActive)
             {
-                if (e.PropertyName == nameof(GameViewModel.IsMenuOpen))
-                {
-                    UpdateMenuVisibility();
-                }
-                else if (e.PropertyName == nameof(GameViewModel.EncryptedLetterRows) ||
-                         e.PropertyName == nameof(GameViewModel.GuessLetterRows))
-                {
-                    // Refresh the letter grids
-                    RefreshLetterGrids();
-                }
-                else if (e.PropertyName == nameof(GameViewModel.IsTutorialActive))
-                {
-                    if (_viewModel.IsTutorialActive)
-                    {
-                        StartTutorial();
-                    }
-                }
-                else if (e.PropertyName == nameof(GameViewModel.CurrentTutorialStep))
-                {
-                    UpdateTutorialStep();
-                }
-            };
-
-            // Game events
-            _viewModel.CorrectGuessAnimationRequested += OnCorrectGuessAnimationRequested;
-            _viewModel.IncorrectGuessAnimationRequested += OnIncorrectGuessAnimationRequested;
+                control.StartAnimation();
+            }
+            else
+            {
+                control.StopAnimation();
+            }
         }
 
-        private void OnSizeChanged(object sender, EventArgs e)
+        private void OnMatrixRainSizeChanged(object sender, EventArgs e)
         {
             _screenWidth = Width;
             _screenHeight = Height;
 
-            // Skip if size hasn't actually changed
-            if (Math.Abs(_screenWidth - _previousWidth) < 1 &&
-                Math.Abs(_screenHeight - _previousHeight) < 1)
+            // Reset columns if active
+            if (_isActive)
             {
-                return;
-            }
-
-            _previousWidth = _screenWidth;
-            _previousHeight = _screenHeight;
-
-            // Update layout based on orientation
-            UpdateLayoutForScreenSize();
-
-            // Update the view model
-            if (_viewModel != null)
-            {
-                _viewModel.UpdateScreenSize(_screenWidth, _screenHeight, _currentOrientation);
+                ResetColumns();
             }
         }
 
-        private void UpdateLayoutForScreenSize()
+        private void StartAnimation()
         {
-            // Determine orientation
-            _currentOrientation = _screenWidth > _screenHeight ?
-                DeviceOrientation.Landscape : DeviceOrientation.Portrait;
+            if (_isActive) return;
+            _isActive = true;
 
-            // Apply appropriate layout to the game dashboard
-            if (_currentOrientation == DeviceOrientation.Portrait)
-            {
-                // Portrait layout - vertical arrangement
-                GameDashboardGrid.ColumnDefinitions.Clear();
-                GameDashboardGrid.RowDefinitions.Clear();
+            // Initialize columns
+            ResetColumns();
 
-                // Add rows
-                GameDashboardGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-                GameDashboardGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-                GameDashboardGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-
-                // Position elements
-                Grid.SetRow(EncryptedGrid, 0);
-                Grid.SetColumn(EncryptedGrid, 0);
-                Grid.SetRowSpan(EncryptedGrid, 1);
-                Grid.SetColumnSpan(EncryptedGrid, 1);
-
-                Grid.SetRow(HintButtonFrame, 1);
-                Grid.SetColumn(HintButtonFrame, 0);
-                Grid.SetRowSpan(HintButtonFrame, 1);
-                Grid.SetColumnSpan(HintButtonFrame, 1);
-
-                Grid.SetRow(GuessGrid, 2);
-                Grid.SetColumn(GuessGrid, 0);
-                Grid.SetRowSpan(GuessGrid, 1);
-                Grid.SetColumnSpan(GuessGrid, 1);
-            }
-            else
-            {
-                // Landscape layout - horizontal arrangement
-                GameDashboardGrid.RowDefinitions.Clear();
-                GameDashboardGrid.ColumnDefinitions.Clear();
-
-                // Add columns
-                GameDashboardGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                GameDashboardGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-                GameDashboardGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-
-                // Position elements
-                Grid.SetRow(EncryptedGrid, 0);
-                Grid.SetColumn(EncryptedGrid, 0);
-                Grid.SetRowSpan(EncryptedGrid, 1);
-                Grid.SetColumnSpan(EncryptedGrid, 1);
-
-                Grid.SetRow(HintButtonFrame, 0);
-                Grid.SetColumn(HintButtonFrame, 1);
-                Grid.SetRowSpan(HintButtonFrame, 1);
-                Grid.SetColumnSpan(HintButtonFrame, 1);
-
-                Grid.SetRow(GuessGrid, 0);
-                Grid.SetColumn(GuessGrid, 2);
-                Grid.SetRowSpan(GuessGrid, 1);
-                Grid.SetColumnSpan(GuessGrid, 1);
-            }
-
-            // Also update the letter grids to ensure they're properly sized
-            RefreshLetterGrids();
+            // Start animation loop
+            StartAnimationLoop();
         }
 
-        #region Menu Animation
-
-        private void InitializeMenuAnimation()
+        private void StopAnimation()
         {
-            // Menu starts off-screen
-            SideMenu.TranslationX = -SideMenu.WidthRequest;
+            _isActive = false;
+            MainContainer.Children.Clear();
+            _columns.Clear();
         }
 
-        private void UpdateMenuVisibility()
+        private void ResetColumns()
         {
-            var translation = _viewModel.IsMenuOpen ? 0 : -SideMenu.WidthRequest;
+            // Clear existing columns
+            MainContainer.Children.Clear();
+            _columns.Clear();
 
-            // Animate menu sliding in/out
-            SideMenu.TranslateTo(translation, 0, 250, Easing.CubicOut);
-        }
+            // Calculate number of columns based on width and density
+            int numColumns = (int)(_screenWidth * Density / 1000);
 
-        #endregion
-
-        #region Letter Grids
-
-        /// <summary>
-        /// Refreshes the letter grids with current data from the view model
-        /// </summary>
-        private void RefreshLetterGrids()
-        {
-            // Skip if view model is null or has no data
-            if (_viewModel == null ||
-                _viewModel.EncryptedLetterRows == null ||
-                _viewModel.GuessLetterRows == null)
+            // Create columns
+            for (int i = 0; i < numColumns; i++)
             {
-                return;
-            }
+                // Calculate random x position
+                double x = _random.NextDouble() * _screenWidth;
 
-            // Calculate grid sizes
-            int encryptedRows = _viewModel.EncryptedLetterRows.Count;
-            int encryptedCols = encryptedRows > 0 ? _viewModel.EncryptedLetterRows[0].Count : 0;
-
-            int guessRows = _viewModel.GuessLetterRows.Count;
-            int guessCols = guessRows > 0 ? _viewModel.GuessLetterRows[0].Count : 0;
-
-            // Clear existing grids
-            EncryptedGrid.Children.Clear();
-            EncryptedGrid.RowDefinitions.Clear();
-            EncryptedGrid.ColumnDefinitions.Clear();
-
-            GuessGrid.Children.Clear();
-            GuessGrid.RowDefinitions.Clear();
-            GuessGrid.ColumnDefinitions.Clear();
-
-            // Skip if no data
-            if (encryptedRows == 0 || guessRows == 0)
-            {
-                return;
-            }
-
-            // Create new cell arrays
-            _encryptedCells = new LetterCell[encryptedRows, encryptedCols];
-            _guessCells = new LetterCell[guessRows, guessCols];
-
-            // Set up encrypted grid
-            SetupGrid(EncryptedGrid, encryptedRows, encryptedCols);
-
-            // Set up guess grid
-            SetupGrid(GuessGrid, guessRows, guessCols);
-
-            // Populate encrypted grid
-            for (int row = 0; row < encryptedRows; row++)
-            {
-                for (int col = 0; col < encryptedCols; col++)
+                // Create column
+                var column = new MatrixColumn
                 {
-                    char letter = row < _viewModel.EncryptedLetterRows.Count &&
-                                 col < _viewModel.EncryptedLetterRows[row].Count ?
-                                 _viewModel.EncryptedLetterRows[row][col] : ' ';
+                    X = x,
+                    Y = -100, // Start above screen
+                    Speed = (1 + _random.NextDouble()) * Speed,
+                    Characters = GenerateRandomCharacters(10 + _random.Next(15)),
+                    StartDelay = _random.Next(100)
+                };
 
-                    // Skip spaces
-                    if (letter == ' ') continue;
+                _columns.Add(column);
+            }
+        }
 
-                    // Create the cell
-                    var cell = new LetterCell
+        private char[] GenerateRandomCharacters(int length)
+        {
+            char[] chars = new char[length];
+            const string charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?";
+
+            for (int i = 0; i < length; i++)
+            {
+                chars[i] = charset[_random.Next(charset.Length)];
+            }
+
+            return chars;
+        }
+
+        private async void StartAnimationLoop()
+        {
+            while (_isActive)
+            {
+                // Update positions
+                UpdateColumns();
+
+                // Redraw columns
+                DrawColumns();
+
+                // Wait for next frame
+                await Task.Delay(50);
+            }
+        }
+
+        private void UpdateColumns()
+        {
+            // Update column positions
+            foreach (var column in _columns)
+            {
+                if (column.StartDelay > 0)
+                {
+                    column.StartDelay--;
+                    continue;
+                }
+
+                column.Y += column.Speed;
+
+                // Reset column if it's off screen
+                if (column.Y > _screenHeight + column.Characters.Length * 20)
+                {
+                    column.Y = -column.Characters.Length * 20;
+                    column.X = _random.NextDouble() * _screenWidth;
+                    column.Speed = (1 + _random.NextDouble()) * Speed;
+                    column.Characters = GenerateRandomCharacters(10 + _random.Next(15));
+                }
+            }
+        }
+
+        private void DrawColumns()
+        {
+            // Clear container
+            MainContainer.Children.Clear();
+
+            // Draw each column
+            foreach (var column in _columns)
+            {
+                if (column.StartDelay > 0) continue;
+
+                // Draw each character in the column
+                for (int i = 0; i < column.Characters.Length; i++)
+                {
+                    double y = column.Y + i * 20;
+
+                    // Skip if offscreen
+                    if (y < -20 || y > _screenHeight) continue;
+
+                    // Calculate opacity (fade out towards the end)
+                    double opacity = 1 - (double)i / column.Characters.Length;
+
+                    // Create label for character
+                    var label = new Label
                     {
-                        Letter = letter.ToString(),
-                        LetterType = LetterCellType.Encrypted,
-                        Frequency = _viewModel.GetFrequency(letter),
-                        IsSelected = _viewModel.IsEncryptedSelected(letter),
-                        IsGuessed = _viewModel.IsLetterGuessed(letter),
-                        Command = _viewModel.EncryptedSelectCommand,
-                        CommandParameter = letter
+                        Text = column.Characters[i].ToString(),
+                        TextColor = Color.WithAlpha((float)opacity),
+                        FontSize = 16,
+                        HorizontalOptions = LayoutOptions.Start,
+                        VerticalOptions = LayoutOptions.Start
                     };
 
-                    // Add to grid
-                    EncryptedGrid.Children.Add(cell);
-                    Grid.SetRow(cell, row);
-                    Grid.SetColumn(cell, col);
+                    // Set position
+                    AbsoluteLayout.SetLayoutBounds(label, new Rect(column.X, y, 20, 20));
+                    // Use Microsoft.Maui.Layouts.AbsoluteLayoutFlags
+                    AbsoluteLayout.SetLayoutFlags(label, Microsoft.Maui.Layouts.AbsoluteLayoutFlags.None);
 
-                    // Store reference
-                    _encryptedCells[row, col] = cell;
+                    // Add to container
+                    MainContainer.Children.Add(label);
                 }
             }
 
-            // Populate guess grid
-            for (int row = 0; row < guessRows; row++)
+            // Add message if provided
+            if (!string.IsNullOrEmpty(Message))
             {
-                for (int col = 0; col < guessCols; col++)
+                var messageLabel = new Label
                 {
-                    char letter = row < _viewModel.GuessLetterRows.Count &&
-                                 col < _viewModel.GuessLetterRows[row].Count ?
-                                 _viewModel.GuessLetterRows[row][col] : ' ';
+                    Text = Message,
+                    TextColor = Color,
+                    FontSize = 24,
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center,
+                    HorizontalTextAlignment = TextAlignment.Center
+                };
 
-                    // Skip spaces
-                    if (letter == ' ') continue;
+                // Set position
+                AbsoluteLayout.SetLayoutBounds(messageLabel, new Rect(0, _screenHeight / 2 - 50, _screenWidth, 100));
+                // Use Microsoft.Maui.Layouts.AbsoluteLayoutFlags
+                AbsoluteLayout.SetLayoutFlags(messageLabel, Microsoft.Maui.Layouts.AbsoluteLayoutFlags.None);
 
-                    // Create the cell
-                    var cell = new LetterCell
-                    {
-                        Letter = letter.ToString(),
-                        LetterType = LetterCellType.Guess,
-                        IsPreviouslyGuessed = _viewModel.IsIncorrectGuess(
-                            _viewModel.SelectedEncrypted ?? ' ', letter),
-                        Command = _viewModel.SubmitGuessCommand,
-                        CommandParameter = letter
-                    };
-
-                    // Add to grid
-                    GuessGrid.Children.Add(cell);
-                    Grid.SetRow(cell, row);
-                    Grid.SetColumn(cell, col);
-
-                    // Store reference
-                    _guessCells[row, col] = cell;
-                }
+                // Add to container
+                MainContainer.Children.Add(messageLabel);
             }
         }
 
-        private void SetupGrid(Grid grid, int rows, int cols)
+        // Helper class for matrix columns
+        private class MatrixColumn
         {
-            // Add row definitions
-            for (int i = 0; i < rows; i++)
-            {
-                grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            }
-
-            // Add column definitions
-            for (int i = 0; i < cols; i++)
-            {
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            }
+            public double X { get; set; }
+            public double Y { get; set; }
+            public double Speed { get; set; }
+            public char[] Characters { get; set; }
+            public int StartDelay { get; set; }
         }
-
-        #endregion
-
-        #region Animation Handlers
-
-        private async void OnCorrectGuessAnimationRequested(object sender, CorrectGuessEventArgs e)
-        {
-            // Find the encrypted cell for this letter
-            var encryptedCell = FindEncryptedCell(e.EncryptedLetter);
-
-            // Find the guess cell for this letter
-            var guessCell = FindGuessCell(e.GuessedLetter);
-
-            if (encryptedCell != null)
-            {
-                // Animate correct guess
-                await encryptedCell.AnimateCorrectGuessAsync();
-
-                // Update selected state
-                encryptedCell.IsGuessed = true;
-                encryptedCell.IsSelected = false;
-            }
-
-            if (guessCell != null)
-            {
-                // Animate correct guess
-                await guessCell.AnimateCorrectGuessAsync();
-            }
-        }
-
-        private async void OnIncorrectGuessAnimationRequested(object sender, IncorrectGuessEventArgs e)
-        {
-            // Find the guess cell for this letter
-            var guessCell = FindGuessCell(e.GuessedLetter);
-
-            if (guessCell != null)
-            {
-                // Animate incorrect guess
-                await guessCell.AnimateIncorrectGuessAsync();
-
-                // Mark as previously guessed
-                guessCell.IsPreviouslyGuessed = true;
-            }
-        }
-
-        private LetterCell FindEncryptedCell(char letter)
-        {
-            if (_encryptedCells == null) return null;
-
-            // Search all cells
-            for (int row = 0; row < _encryptedCells.GetLength(0); row++)
-            {
-                for (int col = 0; col < _encryptedCells.GetLength(1); col++)
-                {
-                    var cell = _encryptedCells[row, col];
-                    if (cell != null && cell.Letter == letter.ToString())
-                    {
-                        return cell;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        private LetterCell FindGuessCell(char letter)
-        {
-            if (_guessCells == null) return null;
-
-            // Search all cells
-            for (int row = 0; row < _guessCells.GetLength(0); row++)
-            {
-                for (int col = 0; col < _guessCells.GetLength(1); col++)
-                {
-                    var cell = _guessCells[row, col];
-                    if (cell != null && cell.Letter == letter.ToString())
-                    {
-                        return cell;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        #endregion
-
-        #region Tutorial
-
-        private void StartTutorial()
-        {
-            // Set initial tutorial step
-            _viewModel.CurrentTutorialStep = 0;
-            UpdateTutorialStep();
-        }
-
-        private void UpdateTutorialStep()
-        {
-            int step = _viewModel.CurrentTutorialStep;
-
-            // Update tutorial content
-            switch (step)
-            {
-                case 0: // Welcome
-                    TutorialTitle.Text = "Welcome to Decodey!";
-                    TutorialDescription.Text = "This game challenges you to decode a hidden quote by solving a letter substitution cipher. Let's learn how to play!";
-                    TutorialHighlight.IsVisible = false;
-                    break;
-
-                case 1: // Text Display
-                    TutorialTitle.Text = "The Encrypted Quote";
-                    TutorialDescription.Text = "This is the encrypted quote you need to solve. Each letter has been substituted with another letter consistently throughout the text.";
-                    PositionTutorialHighlight("TextDisplay");
-                    break;
-
-                case 2: // Encrypted Grid
-                    TutorialTitle.Text = "Available Letters";
-                    TutorialDescription.Text = "These are all the encrypted letters that appear in the quote. Tap one to select it for guessing.";
-                    PositionTutorialHighlight("EncryptedGrid");
-                    break;
-
-                case 3: // Hint Button
-                    TutorialTitle.Text = "Hint Button";
-                    TutorialDescription.Text = "Need help? Tap this button to get a hint. The number shows how many hints you have available.";
-                    PositionTutorialHighlight("HintButtonFrame");
-                    break;
-
-                case 4: // Guess Grid
-                    TutorialTitle.Text = "Make Your Guess";
-                    TutorialDescription.Text = "After selecting an encrypted letter, tap a letter here to guess what it stands for in the original quote.";
-                    PositionTutorialHighlight("GuessGrid");
-                    break;
-
-                case 5: // Completion
-                    TutorialTitle.Text = "You're Ready!";
-                    TutorialDescription.Text = "That's it! Solve the puzzle with as few mistakes as possible to earn a high score. Good luck!";
-                    TutorialHighlight.IsVisible = false;
-                    break;
-            }
-        }
-
-        private void PositionTutorialHighlight(string targetName)
-        {
-            View targetElement = null;
-
-            // Find the target element based on name
-            switch (targetName)
-            {
-                case "TextDisplay":
-                    // First Frame in Row 1
-                    targetElement = RootGrid.Children.FirstOrDefault(c =>
-                        Grid.GetRow(c) == 1 && c is Frame) as View;
-                    break;
-
-                case "EncryptedGrid":
-                    targetElement = EncryptedGrid;
-                    break;
-
-                case "HintButtonFrame":
-                    targetElement = HintButtonFrame;
-                    break;
-
-                case "GuessGrid":
-                    targetElement = GuessGrid;
-                    break;
-            }
-
-            if (targetElement != null)
-            {
-                // Position highlight over the target
-                var bounds = GetBoundsRelativeTo(targetElement, RootGrid);
-
-                // Make highlight visible and set its position
-                TutorialHighlight.IsVisible = true;
-
-                // Position the highlight
-                AbsoluteLayout.SetLayoutBounds(TutorialHighlight, bounds);
-
-                // Position the tutorial box to not overlap with the highlight
-                PositionTutorialBox(bounds);
-            }
-            else
-            {
-                TutorialHighlight.IsVisible = false;
-            }
-        }
-
-        private Rect GetBoundsRelativeTo(View view, View relativeTo)
-        {
-            // Get the bounds of the view in its own coordinate space
-            var bounds = new Rect(0, 0, view.Width, view.Height);
-
-            // Transform to screen coordinates
-            var screenBounds = view.GetAbsoluteBounds();
-            var relativeBounds = relativeTo.GetAbsoluteBounds();
-
-            // Calculate bounds relative to the container
-            return new Rect(
-                screenBounds.X - relativeBounds.X,
-                screenBounds.Y - relativeBounds.Y,
-                screenBounds.Width,
-                screenBounds.Height);
-        }
-
-        private void PositionTutorialBox(Rect highlightBounds)
-        {
-            // Calculate where to position the tutorial box
-            double centerX = highlightBounds.X + (highlightBounds.Width / 2);
-            double centerY = highlightBounds.Y + (highlightBounds.Height / 2);
-
-            // Try to position below first
-            double boxY = highlightBounds.Y + highlightBounds.Height + 20;
-
-            // If that would be off-screen, try above
-            if (boxY + TutorialBox.Height > Height)
-            {
-                boxY = highlightBounds.Y - TutorialBox.Height - 20;
-            }
-
-            // If still off-screen, position in the center
-            if (boxY < 0 || boxY + TutorialBox.Height > Height)
-            {
-                boxY = (Height - TutorialBox.Height) / 2;
-            }
-
-            // Center horizontally, but ensure it's on screen
-            double boxX = centerX - (TutorialBox.Width / 2);
-            boxX = Math.Max(10, Math.Min(boxX, Width - TutorialBox.Width - 10));
-
-            // Set the position
-            AbsoluteLayout.SetLayoutBounds(TutorialBox, new Rect(boxX, boxY, TutorialBox.Width, TutorialBox.Height));
-        }
-
-        #endregion
-    }
-
-    // Enum for device orientation
-    public enum DeviceOrientation
-    {
-        Portrait,
-        Landscape
     }
 }

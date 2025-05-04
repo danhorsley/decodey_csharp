@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using Decodey.ViewModels;
+using Decodey.Services;
 
 namespace Decodey.Views.Dialogs
 {
@@ -30,10 +31,10 @@ namespace Decodey.Views.Dialogs
 
         private void OnViewModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            // If authentication state changed
-            if (e.PropertyName == nameof(SignupViewModel.IsAuthenticated) && _viewModel.IsAuthenticated)
+            // Check for successful signup
+            if (e.PropertyName == "HasError" && !_viewModel.HasError && _viewModel.IsNotBusy)
             {
-                // Set result to true
+                // Assume successful signup if no error and not busy
                 _resultCompletionSource.TrySetResult(true);
 
                 // Close dialog
@@ -49,7 +50,8 @@ namespace Decodey.Views.Dialogs
             base.OnDisappearing();
 
             // Make sure we complete the task
-            _resultCompletionSource.TrySetResult(_viewModel.IsAuthenticated);
+            // Determine result based on whether user signed up
+            _resultCompletionSource.TrySetResult(!_viewModel.HasError && _viewModel.IsNotBusy);
         }
 
         public Task<bool> GetResultAsync()

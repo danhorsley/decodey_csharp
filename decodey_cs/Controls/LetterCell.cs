@@ -9,7 +9,7 @@ namespace Decodey.Controls
     /// A custom control for the letter cells in the game grid
     /// Translated from the React component with similar functionality
     /// </summary>
-    public class LetterCell : ContentView
+    public partial class LetterCell : ContentView
     {
         #region Fields
         private Frame _frame;

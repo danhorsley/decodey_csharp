@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Decodey.Services;
-using Decodey.Views;
+using Decodey.Views.Dialogs; // Add this for LoginDialog
 using System.Text.RegularExpressions;
 
 namespace Decodey.ViewModels
@@ -44,6 +44,9 @@ namespace Decodey.ViewModels
 
         [ObservableProperty]
         private bool _isUsernameAvailable;
+
+        // Property to check if user is authenticated
+        public bool IsAuthenticated => _authService?.IsAuthenticated ?? false;
 
         public SignupViewModel(IAuthService authService, INavigationService navigationService)
         {
@@ -114,8 +117,8 @@ namespace Decodey.ViewModels
 
                         if (loginResult.Success)
                         {
-                            // Show welcome toast
-                            ToastService.ShowToast("Welcome! Your account has been created.");
+                            // Show welcome toast - using DisplayAlert instead of ToastService
+                            await Application.Current.MainPage.DisplayAlert("Welcome", "Your account has been created.", "OK");
 
                             // Close signup page and return to game
                             await _navigationService.GoBack();

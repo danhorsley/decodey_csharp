@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Decodey.Services;
-using Decodey.Views;
+using Decodey.Views.Dialogs; // Add this for SignupDialog reference
 
 namespace Decodey.ViewModels
 {
