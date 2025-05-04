@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Decodey.ViewModels"
+             x:Class="Decodey.Views.GamePage"
+             x:DataType="viewmodel:GameViewModel"
+             Title="decodey">
+
+    <Grid RowDefinitions="Auto,*,Auto" 
+          Padding="12"
+          BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,12">
+            <Button Text="≡" 
+                    Grid.Column="0"
+                    FontSize="24" 
+                    Padding="12,0" 
+                    BackgroundColor="Transparent"
+                    Clicked="OnMenuButtonClicked"/>
+
+            <Label Text="decodey" 
+                   Grid.Column="1"
+                   FontSize="24" 
+                   HorizontalOptions="Center" 
+                   VerticalOptions="Center"
+                   FontAttributes="Bold"
+                   TextColor="{DynamicResource PrimaryTextColor}"/>
+
+            <Button Text="?" 
+                    Grid.Column="2"
+                    FontSize="20" 
+                    Padding="12,0" 
+                    BackgroundColor="Transparent"
+                    Clicked="OnAboutButtonClicked"/>
+        </Grid>
+
+        <!-- Main content -->
+        <Grid Grid.Row="1" RowDefinitions="Auto,*">
+            <!-- Text display -->
+            <Frame Grid.Row="0" 
+                   Padding="12" 
+                   Margin="0,0,0,16"
+                   BackgroundColor="{DynamicResource CardBackgroundColor}"
+                   BorderColor="{DynamicResource BorderColor}"
+                   CornerRadius="8"
+                   HasShadow="True">
+
+                <VerticalStackLayout Spacing="8">
+                    <!-- Encrypted text -->
+                    <Label Text="{Binding Display}" 
+                           FontFamily="Courier New"
+                           FontSize="24"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           LineBreakMode="WordWrap"
+                           TextColor="{DynamicResource PrimaryTextColor}"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Game dashboard -->
+            <Grid Grid.Row="1" RowDefinitions="Auto,*,Auto">
+                <!-- Encrypted letters grid -->
+                <Frame Grid.Row="0"
+                       Padding="12"
+                       Margin="0,0,0,16"
+                       BackgroundColor="{DynamicResource CardBackgroundColor}"
+                       BorderColor="{DynamicResource BorderColor}"
+                       CornerRadius="8"
+                       HasShadow="True">
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Select a letter to decode:"
+                               TextColor="{DynamicResource SecondaryTextColor}"
+                               FontSize="14"/>
+
+                        <FlexLayout BindableLayout.ItemsSource="{Binding SortedEncryptedLetters}"
+                                   Wrap="Wrap"
+                                   JustifyContent="Center"
+                                   AlignItems="Center">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Frame Padding="0"
+                                          Margin="4"
+                                          WidthRequest="44"
+                                          HeightRequest="44"
+                                          CornerRadius="8"
+                                          BackgroundColor="{Binding ., Converter={StaticResource LetterStateConverter}, ConverterParameter={Binding Source={RelativeSource AncestorType={x:Type viewmodel:GameViewModel}}}}"
+                                          BorderColor="{DynamicResource BorderColor}">
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:GameViewModel}}, Path=HandleEncryptedLetterClickCommand}"
+                                                                 CommandParameter="{Binding .}"/>
+                                        </Frame.GestureRecognizers>
+
+                                        <Grid>
+                                            <Label Text="{Binding .}"
+                                                  HorizontalOptions="Center"
+                                                  VerticalOptions="Center"
+                                                  FontSize="20"
+                                                  FontAttributes="Bold"
+                                                  TextColor="{DynamicResource OnPrimaryColor}"/>
+
+                                            <!-- Frequency indicator -->
+                                            <Label Text="{Binding ., Converter={StaticResource FrequencyConverter}, ConverterParameter={Binding Source={RelativeSource AncestorType={x:Type viewmodel:GameViewModel}}}}"
+                                                  FontSize="10"
+                                                  HorizontalOptions="End"
+                                                  VerticalOptions="Start"
+                                                  Margin="0,2,4,0"
+                                                  TextColor="{DynamicResource OnPrimaryColor}"/>
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Hint button -->
+                <Frame Grid.Row="1"
+                       Padding="12"
+                       Margin="0,0,0,16"
+                       BackgroundColor="{DynamicResource SecondaryColor}"
+                       CornerRadius="8"
+                       HasShadow="True"
+                       HorizontalOptions="Center"
+                       MinimumWidthRequest="160">
+
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GetHintCommand}"/>
+                    </Frame.GestureRecognizers>
+
+                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto">
+                        <Label Text="{Binding Mistakes, StringFormat='HINT TOKENS: {0}/{1}', Converter={StaticResource RemainingMistakesConverter}, ConverterParameter={Binding MaxMistakes}}"
+                               Grid.Row="0"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               HorizontalOptions="Center"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource OnSecondaryColor}"/>
+
+                        <ActivityIndicator Grid.Row="0"
+                                          Grid.Column="1"
+                                          IsRunning="{Binding IsHintInProgress}"
+                                          IsVisible="{Binding IsHintInProgress}"
+                                          Color="{DynamicResource OnSecondaryColor}"
+                                          WidthRequest="24"
+                                          HeightRequest="24"/>
+                    </Grid>
+                </Frame>
+
+                <!-- Original letters grid -->
+                <Frame Grid.Row="2"
+                       Padding="12"
+                       BackgroundColor="{DynamicResource CardBackgroundColor}"
+                       BorderColor="{DynamicResource BorderColor}"
+                       CornerRadius="8"
+                       HasShadow="True">
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Choose what the original letter is:"
+                               TextColor="{DynamicResource SecondaryTextColor}"
+                               FontSize="14"/>
+
+                        <FlexLayout BindableLayout.ItemsSource="{Binding OriginalLetters}"
+                                   Wrap="Wrap"
+                                   JustifyContent="Center"
+                                   AlignItems="Center">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Frame Padding="0"
+                                          Margin="4"
+                                          WidthRequest="40"
+                                          HeightRequest="40"
+                                          CornerRadius="8"
+                                          BackgroundColor="{Binding ., Converter={StaticResource GuessStateConverter}, ConverterParameter={Binding Source={RelativeSource AncestorType={x:Type viewmodel:GameViewModel}}}}"
+                                          BorderColor="{DynamicResource BorderColor}">
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:GameViewModel}}, Path=HandleGuessLetterClickCommand}"
+                                                                 CommandParameter="{Binding .}"/>
+                                        </Frame.GestureRecognizers>
+
+                                        <Label Text="{Binding .}"
+                                              HorizontalOptions="Center"
+                                              VerticalOptions="Center"
+                                              FontSize="18"
+                                              FontAttributes="Bold"
+                                              TextColor="{DynamicResource OnPrimaryColor}"/>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+        </Grid>
+
+        <!-- Game over overlay -->
+        <Grid Grid.Row="0" Grid.RowSpan="3" 
+              BackgroundColor="#80000000"
+              IsVisible="{Binding HasWon}">
+            <Frame BackgroundColor="{DynamicResource CardBackgroundColor}"
+                   Padding="24"
+                   Margin="24"
+                   CornerRadius="16"
+                   HasShadow="True"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center">
+
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="You solved the puzzle!"
+                           FontSize="28"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="{DynamicResource PrimaryTextColor}"/>
+
+                    <Label Text="{Binding Display}"
+                           FontSize="18"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           TextColor="{DynamicResource PrimaryTextColor}"/>
+
+                    <Label Text="{Binding Mistakes, StringFormat='Hint tokens used: {0}/{1}', ConverterParameter={Binding MaxMistakes}}"
+                           FontSize="16"
+                           HorizontalOptions="Center"
+                           TextColor="{DynamicResource SecondaryTextColor}"/>
+
+                    <Button Text="Play Again"
+                            Command="{Binding StartNewGameCommand}"
+                            HorizontalOptions="Center"
+                            WidthRequest="160"
+                            Margin="0,16,0,0"
+                            BackgroundColor="{DynamicResource PrimaryColor}"
+                            TextColor="{DynamicResource OnPrimaryColor}"/>
+                </VerticalStackLayout>
+            </Frame>
+        </Grid>
+
+        <!-- Loading overlay -->
+        <Grid Grid.Row="0" Grid.RowSpan="3"
+              BackgroundColor="{DynamicResource PageBackgroundColor}"
+              IsVisible="{Binding IsLoading}">
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="24">
+                <ActivityIndicator IsRunning="True" 
+                                   Color="{DynamicResource PrimaryColor}"
+                                   WidthRequest="64"
+                                   HeightRequest="64"/>
+                <Label Text="Decrypting puzzle..."
+                       FontSize="18"
+                       HorizontalOptions="Center"
+                       TextColor="{DynamicResource PrimaryTextColor}"/>
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>
