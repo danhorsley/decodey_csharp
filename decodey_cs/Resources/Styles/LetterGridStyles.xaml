@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Decodey.Resources.Styles">
+
+    <!-- 
+    LetterGridStyles.xaml - Styles for letter grids and cells
+    Translated from GameDashboard.css and related styles 
+    -->
+
+    <!-- Letter Grid Styles -->
+    <Style x:Key="LetterGridStyle" TargetType="Grid">
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="RowSpacing" Value="4" />
+        <Setter Property="ColumnSpacing" Value="4" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="10" />
+    </Style>
+
+    <!-- Encrypted Grid (Left side) -->
+    <Style x:Key="EncryptedGridStyle" BasedOn="{StaticResource LetterGridStyle}" TargetType="Grid">
+        <Setter Property="Margin" Value="0,0,10,0" />
+    </Style>
+
+    <!-- Guess Grid (Right side) -->
+    <Style x:Key="GuessGridStyle" BasedOn="{StaticResource LetterGridStyle}" TargetType="Grid">
+        <Setter Property="Margin" Value="10,0,0,0" />
+    </Style>
+
+    <!-- Letter Cell Frame Style - The container for each letter -->
+    <Style x:Key="LetterCellFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurfaceColor}, Dark={StaticResource DarkSurfaceColor}}" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource LightBorderColor}, Dark={StaticResource DarkBorderColor}}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HasShadow" Value="True" />
+        <Setter Property="WidthRequest" Value="38" />
+        <Setter Property="HeightRequest" Value="38" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <!-- Letter Label Style - The text inside each cell -->
+    <Style x:Key="LetterLabelStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="{StaticResource MonospaceFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeLarge}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextPrimaryColor}, Dark={StaticResource DarkTextPrimaryColor}}" />
+        <Setter Property="LineHeight" Value="1" />
+    </Style>
+
+    <!-- Frequency counter style - The small number in the corner -->
+    <Style x:Key="FrequencyLabelStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="{StaticResource MonospaceFontFamily}" />
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightSecondaryColor}, Dark={StaticResource DarkSecondaryColor}}" />
+        <Setter Property="HorizontalOptions" Value="End" />
+        <Setter Property="VerticalOptions" Value="End" />
+        <Setter Property="Margin" Value="0,0,2,1" />
+        <Setter Property="Opacity" Value="0.7" />
+    </Style>
+
+    <!-- Selected Letter Visual State -->
+    <Style x:Key="SelectedLetterCellFrameStyle" TargetType="Frame" BasedOn="{StaticResource LetterCellFrameStyle}">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light=#0062cc, Dark=#3db8df}" />
+        <Setter Property="Scale" Value="1.05" />
+    </Style>
+
+    <Style x:Key="SelectedLetterLabelStyle" TargetType="Label" BasedOn="{StaticResource LetterLabelStyle}">
+        <Setter Property="TextColor" Value="White" />
+    </Style>
+
+    <!-- Already Guessed Letter Visual State -->
+    <Style x:Key="GuessedLetterCellFrameStyle" TargetType="Frame" BasedOn="{StaticResource LetterCellFrameStyle}">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#e9ecef, Dark=#222222}" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light=#ced4da, Dark=#7a7a7a}" />
+        <Setter Property="Opacity" Value="0.8" />
+    </Style>
+
+    <Style x:Key="GuessedLetterLabelStyle" TargetType="Label" BasedOn="{StaticResource LetterLabelStyle}">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light=#495057, Dark=#aaaaaa}" />
+    </Style>
+
+    <!-- Previously Guessed (Incorrect) Letter Visual State -->
+    <Style x:Key="PreviouslyGuessedLetterCellFrameStyle" TargetType="Frame" BasedOn="{StaticResource LetterCellFrameStyle}">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=rgba(255,0,0,0.1), Dark=rgba(255,0,0,0.15)}" />
+        <Setter Property="Opacity" Value="0.6" />
+    </Style>
+
+    <!-- Flashing (Correct Guess) Animation Trigger Style -->
+    <Style x:Key="FlashLetterCellFrameStyle" TargetType="Frame" BasedOn="{StaticResource LetterCellFrameStyle}">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#28a745, Dark=#28a745}" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light=#218838, Dark=#218838}" />
+    </Style>
+
+    <Style x:Key="FlashLetterLabelStyle" TargetType="Label" BasedOn="{StaticResource LetterLabelStyle}">
+        <Setter Property="TextColor" Value="White" />
+    </Style>
+
+    <!-- Hint Button Styles -->
+    <Style x:Key="HintButtonFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=White, Dark=#222222}" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light=#333333, Dark=#666666}" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="MinimumWidthRequest" Value="90" />
+        <Setter Property="MinimumHeightRequest" Value="60" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="HintTextLabelStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="{StaticResource MonospaceFontFamily}" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="HintLabelLabelStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="{StaticResource MonospaceFontFamily}" />
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="Opacity" Value="0.7" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0,2,0,0" />
+    </Style>
+
+    <!-- Hint Button Success State Style (7+ tokens) -->
+    <Style x:Key="HintButtonSuccessFrameStyle" TargetType="Frame" BasedOn="{StaticResource HintButtonFrameStyle}">
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light=rgb(0,66,170), Dark=#4cc9f0}" />
+    </Style>
+
+    <!-- Hint Button Warning State Style (3-6 tokens) -->
+    <Style x:Key="HintButtonWarningFrameStyle" TargetType="Frame" BasedOn="{StaticResource HintButtonFrameStyle}">
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light=#ffc107, Dark=#FF9E64}" />
+    </Style>
+
+    <!-- Hint Button Danger State Style (0-2 tokens) -->
+    <Style x:Key="HintButtonDangerFrameStyle" TargetType="Frame" BasedOn="{StaticResource HintButtonFrameStyle}">
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light=#dc3545, Dark=#FF5277}" />
+    </Style>
+
+    <!-- Pending Hint Indicator Style -->
+    <Style x:Key="PendingHintIndicatorFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#ffc107, Dark=#FF9E64}" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="WidthRequest" Value="20" />
+        <Setter Property="HeightRequest" Value="20" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="HorizontalOptions" Value="End" />
+        <Setter Property="VerticalOptions" Value="Start" />
+        <Setter Property="TranslationX" Value="8" />
+        <Setter Property="TranslationY" Value="-8" />
+    </Style>
+
+    <Style x:Key="PendingHintLabelStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light=#000, Dark=#222}" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+    </Style>
+</ResourceDictionary>

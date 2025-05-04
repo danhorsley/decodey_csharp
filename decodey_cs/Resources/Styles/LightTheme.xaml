@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Decodey.Resources.Styles">
+
+    <!-- 
+    LightTheme.xaml - Light theme specific styles 
+    Translated from CSS light theme styles across multiple files
+    -->
+
+    <!-- Light Theme Basic Colors from BaseStyles.xaml (referenced here for convenience) -->
+    <!-- 
+    LightBackgroundColor: #FFFFFF
+    LightSurfaceColor: #F8F9FA
+    LightPrimaryColor: #007BFF - Blue
+    LightSecondaryColor: #6C757D - Gray
+    LightAccentColor: #00A3FF - Light Blue
+    LightTextPrimaryColor: #212529 - Almost black
+    LightBorderColor: #DEE2E6
+    LightSuccessColor: #28A745
+    LightErrorColor: #DC3545
+    LightWarningColor: #FFC107
+    LightInfoColor: #17A2B8
+    LightMatrixColor: #00FF41 - Matrix rain color
+    -->
+
+    <!-- Light Theme App Style -->
+    <Style x:Key="LightAppStyle" TargetType="Application">
+        <Setter Property="UserAppTheme" Value="Light" />
+    </Style>
+
+    <!-- Light Theme Content Page Style -->
+    <Style x:Key="LightPageStyle" TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="{StaticResource LightBackgroundColor}" />
+    </Style>
+
+    <!-- Light Theme Navigation Style -->
+    <Style x:Key="LightNavigationStyle" TargetType="NavigationPage">
+        <Setter Property="BarBackgroundColor" Value="{StaticResource LightPrimaryColor}" />
+        <Setter Property="BarTextColor" Value="White" />
+    </Style>
+
+    <!-- Light Theme Title Style -->
+    <Style x:Key="LightTitleLabelStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="{StaticResource MonospaceFontFamily}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{StaticResource LightPrimaryColor}" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+    </Style>
+
+    <!-- Light Theme UI Border Style -->
+    <Style x:Key="LightBorderStyle" TargetType="Border">
+        <Setter Property="Stroke" Value="{StaticResource LightBorderColor}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+    </Style>
+
+    <!-- Light Theme Button Style -->
+    <Style x:Key="LightButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource LightPrimaryColor}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFontFamily}" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="15,10" />
+    </Style>
+
+    <!-- Light Theme Secondary Button Style -->
+    <Style x:Key="LightSecondaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="White" />
+        <Setter Property="TextColor" Value="{StaticResource LightPrimaryColor}" />
+        <Setter Property="BorderColor" Value="{StaticResource LightPrimaryColor}" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFontFamily}" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="15,10" />
+    </Style>
+
+    <!-- Light Theme Card Style -->
+    <Style x:Key="LightCardStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="White" />
+        <Setter Property="BorderColor" Value="{StaticResource LightBorderColor}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="HasShadow" Value="True" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <!-- Light Theme List Item Style -->
+    <Style x:Key="LightListItemStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="White" />
+        <Setter Property="BorderColor" Value="{StaticResource LightBorderColor}" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="Margin" Value="0,4" />
+        <Setter Property="HasShadow" Value="True" />
+    </Style>
+
+    <!-- Light Theme Input Style -->
+    <Style x:Key="LightEntryStyle" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="White" />
+        <Setter Property="TextColor" Value="{StaticResource LightTextPrimaryColor}" />
+        <Setter Property="PlaceholderColor" Value="{StaticResource LightSecondaryColor}" />
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFontFamily}" />
+    </Style>
+
+    <!-- Light Theme Game Message Style -->
+    <Style x:Key="LightGameMessageFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="#f0f8ff" />
+        <Setter Property="BorderColor" Value="{StaticResource LightBorderColor}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="Margin" Value="10,15" />
+        <Setter Property="HasShadow" Value="True" />
+    </Style>
+
+    <!-- Light Theme Status Message Styles -->
+    <Style x:Key="LightSuccessMessageFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="#d4edda" />
+        <Setter Property="BorderColor" Value="#c3e6cb" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="12,8" />
+    </Style>
+
+    <Style x:Key="LightErrorMessageFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="#f8d7da" />
+        <Setter Property="BorderColor" Value="#f5c6cb" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="12,8" />
+    </Style>
+
+    <!-- Light Theme Placeholder Style -->
+    <Style x:Key="LightPlaceholderLabelStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="#495057" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <!-- Light Theme Loading Container Style -->
+    <Style x:Key="LightLoadingFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="#f8f9fa" />
+        <Setter Property="BorderColor" Value="{StaticResource LightBorderColor}" />
+        <Setter Property="HasShadow" Value="True" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="20" />
+    </Style>
+
+    <!-- Light Theme Error Container Style -->
+    <Style x:Key="LightErrorContainerFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="#f0f8ff" />
+        <Setter Property="BorderColor" Value="#dc3545" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="HasShadow" Value="True" />
+    </Style>
+
+    <!-- Light Theme Help Text Style -->
+    <Style x:Key="LightHelpTextLabelStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="#6c757d" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Opacity" Value="0.8" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0,15,0,0" />
+    </Style>
+</ResourceDictionary>

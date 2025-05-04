@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Decodey.Resources.Styles">
+
+    <!-- 
+    AnimationStyles.xaml - Animation styles and resources
+    Note: Most animations will be implemented in code-behind due to MAUI limitations
+    This file provides animation-specific resources and timing constants
+    -->
+
+    <!-- Animation Timing Constants -->
+    <x:Double x:Key="AnimationDurationExtraShort">200</x:Double>
+    <x:Double x:Key="AnimationDurationShort">300</x:Double>
+    <x:Double x:Key="AnimationDurationMedium">500</x:Double>
+    <x:Double x:Key="AnimationDurationLong">800</x:Double>
+    <x:Double x:Key="AnimationDurationExtraLong">1200</x:Double>
+
+    <!-- Easing Functions -->
+    <Easing x:Key="EasingIn">CubicIn</Easing>
+    <Easing x:Key="EasingOut">CubicOut</Easing>
+    <Easing x:Key="EasingInOut">CubicInOut</Easing>
+    <Easing x:Key="EasingBounce">BounceOut</Easing>
+    <Easing x:Key="EasingSpring">SpringOut</Easing>
+
+    <!-- Letter Cell Flash Animation Resources -->
+    <Color x:Key="FlashStartColorLight">#28a745</Color>
+    <Color x:Key="FlashEndColorLight">White</Color>
+    <Color x:Key="FlashStartColorDark">#28a745</Color>
+    <Color x:Key="FlashEndColorDark">#222222</Color>
+    <Color x:Key="FlashTextStartColor">White</Color>
+    <Color x:Key="FlashTextEndColorLight">#212529</Color>
+    <Color x:Key="FlashTextEndColorDark">#f8f9fa</Color>
+
+    <!-- Win/Loss Animation Resources -->
+    <Color x:Key="WinPulseStartColor">#28a745</Color>
+    <Color x:Key="WinPulseEndColor">#218838</Color>
+    <Color x:Key="LossPulseStartColor">#dc3545</Color>
+    <Color x:Key="LossPulseEndColor">#bd2130</Color>
+
+    <!-- Matrix Rain Animation Resources -->
+    <Color x:Key="MatrixCharColorLight">#00FF41</Color>
+    <Color x:Key="MatrixCharColorDark">#4CC9F0</Color>
+    <x:Double x:Key="MatrixSpeed">5</x:Double>
+    <x:Double x:Key="MatrixDensity">50</x:Double>
+    <x:Double x:Key="MatrixFadeSpeed">0.05</x:Double>
+    <x:Array x:Key="MatrixCharSet" Type="x:String">
+        <x:String>0</x:String>
+        <x:String>1</x:String>
+        <x:String>ｱ</x:String>
+        <x:String>ｲ</x:String>
+        <x:String>ｳ</x:String>
+        <x:String>ｴ</x:String>
+        <x:String>ｵ</x:String>
+        <x:String>ｶ</x:String>
+        <x:String>ｷ</x:String>
+        <x:String>ｸ</x:String>
+        <x:String>ｹ</x:String>
+        <x:String>ｺ</x:String>
+        <x:String>ｻ</x:String>
+        <x:String>ｼ</x:String>
+        <x:String>ｽ</x:String>
+        <x:String>ｾ</x:String>
+        <x:String>ｿ</x:String>
+        <x:String>ﾀ</x:String>
+        <x:String>ﾁ</x:String>
+        <x:String>ﾂ</x:String>
+        <x:String>ﾃ</x:String>
+        <x:String>ﾄ</x:String>
+        <x:String>ﾅ</x:String>
+        <x:String>ﾆ</x:String>
+        <x:String>ﾇ</x:String>
+        <x:String>ﾈ</x:String>
+        <x:String>ﾉ</x:String>
+        <x:String>♠</x:String>
+        <x:String>♥</x:String>
+        <x:String>♦</x:String>
+        <x:String>♣</x:String>
+        <x:String>★</x:String>
+        <x:String>☆</x:String>
+        <x:String>§</x:String>
+        <x:String>†</x:String>
+    </x:Array>
+
+    <!-- Celebration Overlay Styles -->
+    <Style x:Key="CelebrationOverlayStyle" TargetType="AbsoluteLayout">
+        <Setter Property="BackgroundColor" Value="#80000000" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="VerticalOptions" Value="Fill" />
+    </Style>
+
+    <!-- Crypto Spinner Styles -->
+    <Style x:Key="CryptoSpinnerContainerStyle" TargetType="Grid">
+        <Setter Property="BackgroundColor" Value="#80000000" />
+        <Setter Property="WidthRequest" Value="200" />
+        <Setter Property="HeightRequest" Value="100" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="CryptoSpinnerLabelStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="{StaticResource MonospaceFontFamily}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightMatrixColor}, Dark={StaticResource DarkMatrixColor}}" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+    </Style>
+
+    <!-- Loading Spinner Animation Resources -->
+    <x:Double x:Key="SpinnerRotationDuration">1500</x:Double>
+    <x:Double x:Key="SpinnerOpacityDuration">750</x:Double>
+
+    <!-- Character Animation (Crypto/Decryption effect) Resources -->
+    <x:Double x:Key="CharUpdateInterval">75</x:Double>
+    <x:Double x:Key="CharDecryptDuration">1500</x:Double>
+    <x:Array x:Key="CryptoCharSet" Type="x:String">
+        <x:String>Ω</x:String>
+        <x:String>Δ</x:String>
+        <x:String>Φ</x:String>
+        <x:String>Ψ</x:String>
+        <x:String>Σ</x:String>
+        <x:String>Γ</x:String>
+        <x:String>Ξ</x:String>
+        <x:String>Π</x:String>
+        <x:String>Θ</x:String>
+        <x:String>Λ</x:String>
+        <x:String>※</x:String>
+        <x:String>⚔</x:String>
+        <x:String>⚕</x:String>
+        <x:String>☢</x:String>
+        <x:String>☣</x:String>
+        <x:String>☯</x:String>
+    </x:Array>
+</ResourceDictionary>

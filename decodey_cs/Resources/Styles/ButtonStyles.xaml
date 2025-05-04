@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Decodey.Resources.Styles">
+
+	<!-- 
+    ButtonStyles.xaml - Styles for buttons and interactive controls
+    Translated from various button-related CSS across the app
+    -->
+
+	<!-- Primary Button Style -->
+	<Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}" />
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=White, Dark=#222222}" />
+		<Setter Property="FontAttributes" Value="Bold" />
+	</Style>
+
+	<!-- Secondary Button Style -->
+	<Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#6c757d, Dark=#444444}" />
+		<Setter Property="TextColor" Value="White" />
+	</Style>
+
+	<!-- Outline Button Style -->
+	<Style x:Key="OutlineButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+		<Setter Property="BackgroundColor" Value="Transparent" />
+		<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}" />
+		<Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}" />
+		<Setter Property="BorderWidth" Value="1" />
+	</Style>
+
+	<!-- Success Button Style -->
+	<Style x:Key="SuccessButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#28a745, Dark=#28a745}" />
+		<Setter Property="TextColor" Value="White" />
+	</Style>
+
+	<!-- Danger Button Style -->
+	<Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#dc3545, Dark=#E53935}" />
+		<Setter Property="TextColor" Value="White" />
+	</Style>
+
+	<!-- Warning Button Style -->
+	<Style x:Key="WarningButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#ffc107, Dark=#FF9E64}" />
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=#212529, Dark=#222222}" />
+	</Style>
+
+	<!-- Info Button Style -->
+	<Style x:Key="InfoButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#17a2b8, Dark=#4cc9f0}" />
+		<Setter Property="TextColor" Value="White" />
+	</Style>
+
+	<!-- Link Button Style -->
+	<Style x:Key="LinkButtonStyle" TargetType="Button">
+		<Setter Property="BackgroundColor" Value="Transparent" />
+		<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}" />
+		<Setter Property="FontFamily" Value="{StaticResource PrimaryFontFamily}" />
+		<Setter Property="FontSize" Value="{StaticResource FontSizeNormal}" />
+		<Setter Property="Padding" Value="0" />
+		<Setter Property="TextDecorations" Value="Underline" />
+	</Style>
+
+	<!-- Icon Button Style -->
+	<Style x:Key="IconButtonStyle" TargetType="Button">
+		<Setter Property="BackgroundColor" Value="Transparent" />
+		<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextPrimaryColor}, Dark={StaticResource DarkTextPrimaryColor}}" />
+		<Setter Property="FontFamily" Value="{StaticResource PrimaryFontFamily}" />
+		<Setter Property="Padding" Value="8" />
+		<Setter Property="CornerRadius" Value="20" />
+		<Setter Property="WidthRequest" Value="40" />
+		<Setter Property="HeightRequest" Value="40" />
+	</Style>
+
+	<!-- Header Icon Button Style -->
+	<Style x:Key="HeaderIconButtonStyle" TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=#212529, Dark=#f8f9fa}" />
+		<Setter Property="Margin" Value="0" />
+	</Style>
+
+	<!-- Floating Action Button Style -->
+	<Style x:Key="FloatingActionButtonStyle" TargetType="Button">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}" />
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=White, Dark=#222222}" />
+		<Setter Property="FontFamily" Value="{StaticResource PrimaryFontFamily}" />
+		<Setter Property="FontSize" Value="22" />
+		<Setter Property="CornerRadius" Value="28" />
+		<Setter Property="WidthRequest" Value="56" />
+		<Setter Property="HeightRequest" Value="56" />
+		<Setter Property="Padding" Value="0" />
+		<Setter Property="VerticalOptions" Value="End" />
+		<Setter Property="HorizontalOptions" Value="End" />
+		<Setter Property="Margin" Value="0,0,16,16" />
+		<Setter Property="Shadow">
+			<Shadow
+                Brush="Black"
+                Offset="0,3"
+                Radius="3"
+                Opacity="0.3" />
+		</Setter>
+	</Style>
+
+	<!-- Game Button Styles -->
+
+	<!-- Daily Challenge Button Style -->
+	<Style x:Key="DailyChallengeButtonStyle" TargetType="Button" BasedOn="{StaticResource FloatingActionButtonStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#FF5722, Dark=#FF7043}" />
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=White, Dark=#222222}" />
+		<Setter Property="BorderColor" Value="{AppThemeBinding Light=#E64A19, Dark=#FF5722}" />
+		<Setter Property="BorderWidth" Value="1" />
+		<Setter Property="CornerRadius" Value="28" />
+		<Setter Property="WidthRequest" Value="50" />
+		<Setter Property="HeightRequest" Value="50" />
+	</Style>
+
+	<!-- Leaderboard Button Style -->
+	<Style x:Key="LeaderboardButtonStyle" TargetType="Button" BasedOn="{StaticResource FloatingActionButtonStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=Black, Dark=#E5B80B}" />
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=#E5B80B, Dark=Black}" />
+		<Setter Property="BorderColor" Value="{AppThemeBinding Light=#D4A017, Dark=#FFD700}" />
+		<Setter Property="BorderWidth" Value="1" />
+		<Setter Property="CornerRadius" Value="28" />
+		<Setter Property="WidthRequest" Value="50" />
+		<Setter Property="HeightRequest" Value="50" />
+	</Style>
+
+	<!-- Home Page Button Styles -->
+	<Style x:Key="HomeButtonBaseStyle" TargetType="Frame">
+		<Setter Property="CornerRadius" Value="8" />
+		<Setter Property="HasShadow" Value="True" />
+		<Setter Property="Padding" Value="20" />
+		<Setter Property="HeightRequest" Value="100" />
+		<Setter Property="WidthRequest" Value="140" />
+		<Setter Property="VerticalOptions" Value="FillAndExpand" />
+		<Setter Property="HorizontalOptions" Value="FillAndExpand" />
+	</Style>
+
+	<!-- Daily Challenge Home Button -->
+	<Style x:Key="DailyHomeButtonStyle" TargetType="Frame" BasedOn="{StaticResource HomeButtonBaseStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#e3f2fd, Dark=#4cc9f0}" />
+		<Setter Property="BorderColor" Value="{AppThemeBinding Light=#b6d4fe, Dark=Transparent}" />
+	</Style>
+
+	<!-- Custom Game Home Button -->
+	<Style x:Key="CustomHomeButtonStyle" TargetType="Frame" BasedOn="{StaticResource HomeButtonBaseStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#e8f0fe, Dark=#4361ee}" />
+		<Setter Property="BorderColor" Value="{AppThemeBinding Light=#c5cae9, Dark=Transparent}" />
+	</Style>
+
+	<!-- Leaderboard Home Button -->
+	<Style x:Key="LeaderboardHomeButtonStyle" TargetType="Frame" BasedOn="{StaticResource HomeButtonBaseStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#f3e5f5, Dark=#f72585}" />
+		<Setter Property="BorderColor" Value="{AppThemeBinding Light=#e1bee7, Dark=Transparent}" />
+	</Style>
+
+	<!-- Tutorial Home Button -->
+	<Style x:Key="TutorialHomeButtonStyle" TargetType="Frame" BasedOn="{StaticResource HomeButtonBaseStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#e8f5e9, Dark=#7209b7}" />
+		<Setter Property="BorderColor" Value="{AppThemeBinding Light=#c8e6c9, Dark=Transparent}" />
+	</Style>
+
+	<!-- Settings Home Button -->
+	<Style x:Key="SettingsHomeButtonStyle" TargetType="Frame" BasedOn="{StaticResource HomeButtonBaseStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#fff8e1, Dark=#3a0ca3}" />
+		<Setter Property="BorderColor" Value="{AppThemeBinding Light=#ffe082, Dark=Transparent}" />
+	</Style>
+
+	<!-- About Home Button -->
+	<Style x:Key="AboutHomeButtonStyle" TargetType="Frame" BasedOn="{StaticResource HomeButtonBaseStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#e1f5fe, Dark=#4cc9f0}" />
+		<Setter Property="BorderColor" Value="{AppThemeBinding Light=#b3e5fc, Dark=Transparent}" />
+	</Style>
+
+	<!-- Logout Home Button -->
+	<Style x:Key="LogoutHomeButtonStyle" TargetType="Frame" BasedOn="{StaticResource HomeButtonBaseStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#ffebee, Dark=#f72585}" />
+		<Setter Property="BorderColor" Value="{AppThemeBinding Light=#ffcdd2, Dark=Transparent}" />
+	</Style>
+
+	<!-- Quote Feedback Home Button -->
+	<Style x:Key="QuoteFeedbackHomeButtonStyle" TargetType="Frame" BasedOn="{StaticResource HomeButtonBaseStyle}">
+		<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#e0f7fa, Dark=#00838f}" />
+		<Setter Property="BorderColor" Value="{AppThemeBinding Light=#b2ebf2, Dark=Transparent}" />
+	</Style>
+
+	<!-- Home Button Icon Style -->
+	<Style x:Key="HomeButtonIconLabelStyle" TargetType="Label">
+		<Setter Property="FontSize" Value="24" />
+		<Setter Property="HorizontalTextAlignment" Value="Center" />
+		<Setter Property="Margin" Value="0,0,0,10" />
+	</Style>
+
+	<!-- Home Button Text Style -->
+	<Style x:Key="HomeButtonTextLabelStyle" TargetType="Label">
+		<Setter Property="FontFamily" Value="{StaticResource MonospaceFontFamily}" />
+		<Setter Property="FontSize" Value="14" />
+		<Setter Property="HorizontalTextAlignment" Value="Center" />
+		<Setter Property="LineBreakMode" Value="TailTruncation" />
+	</Style>
+
+	<!-- Daily Challenge Text Color -->
+	<Style x:Key="DailyHomeTextStyle" TargetType="Label" BasedOn="{StaticResource HomeButtonTextLabelStyle}">
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=#0d6efd, Dark=#333333}" />
+	</Style>
+
+	<!-- Custom Game Text Color -->
+	<Style x:Key="CustomHomeTextStyle" TargetType="Label" BasedOn="{StaticResource HomeButtonTextLabelStyle}">
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=#3949ab, Dark=White}" />
+	</Style>
+
+	<!-- Leaderboard Text Color -->
+	<Style x:Key="LeaderboardHomeTextStyle" TargetType="Label" BasedOn="{StaticResource HomeButtonTextLabelStyle}">
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=#9c27b0, Dark=White}" />
+	</Style>
+
+	<!-- Tutorial Text Color -->
+	<Style x:Key="TutorialHomeTextStyle" TargetType="Label" BasedOn="{StaticResource HomeButtonTextLabelStyle}">
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=#2e7d32, Dark=White}" />
+	</Style>
+
+	<!-- Settings Text Color -->
+	<Style x:Key="SettingsHomeTextStyle" TargetType="Label" BasedOn="{StaticResource HomeButtonTextLabelStyle}">
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=#ff8f00, Dark=White}" />
+	</Style>
+
+	<!-- About Text Color -->
+	<Style x:Key="AboutHomeTextStyle" TargetType="Label" BasedOn="{StaticResource HomeButtonTextLabelStyle}">
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=#0288d1, Dark=#333333}" />
+	</Style>
+
+	<!-- Logout Text Color -->
+	<Style x:Key="LogoutHomeTextStyle" TargetType="Label" BasedOn="{StaticResource HomeButtonTextLabelStyle}">
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=#e53935, Dark=White}" />
+	</Style>
+
+	<!-- Quote Feedback Text Color -->
+	<Style x:Key="QuoteFeedbackHomeTextStyle" TargetType="Label" BasedOn="{StaticResource HomeButtonTextLabelStyle}">
+		<Setter Property="TextColor" Value="{AppThemeBinding Light=#00838f, Dark=White}" />
+	</Style>
+</ResourceDictionary>

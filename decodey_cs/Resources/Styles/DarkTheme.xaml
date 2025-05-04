@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Decodey.Resources.Styles">
+
+    <!-- 
+    DarkTheme.xaml - Dark theme specific styles 
+    Translated from ConsolidatedDarkTheme.css and related styles
+    -->
+
+    <!-- Dark Theme Basic Colors from BaseStyles.xaml (referenced here for convenience) -->
+    <!-- 
+    DarkBackgroundColor: #222222
+    DarkSurfaceColor: #333333
+    DarkPrimaryColor: #4CC9F0 - Sci-fi blue
+    DarkSecondaryColor: #6C757D - Gray
+    DarkAccentColor: #00ED99 - Green
+    DarkTextPrimaryColor: #F8F9FA - Almost white
+    DarkBorderColor: #444444
+    DarkSuccessColor: #28A745
+    DarkErrorColor: #E53935
+    DarkWarningColor: #FF9E64
+    DarkInfoColor: #4CC9F0
+    DarkMatrixColor: #4CC9F0 - Matrix rain color
+    -->
+
+    <!-- Dark Theme App Styles -->
+    <Style x:Key="DarkAppStyle" TargetType="Application">
+        <Setter Property="UserAppTheme" Value="Dark" />
+    </Style>
+
+    <!-- Dark Theme Content Page Style -->
+    <Style x:Key="DarkPageStyle" TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkBackgroundColor}" />
+    </Style>
+
+    <!-- Dark Theme Navigation Style -->
+    <Style x:Key="DarkNavigationStyle" TargetType="NavigationPage">
+        <Setter Property="BarBackgroundColor" Value="{StaticResource DarkSurfaceColor}" />
+        <Setter Property="BarTextColor" Value="{StaticResource DarkTextPrimaryColor}" />
+    </Style>
+
+    <!-- Dark Theme Title Style -->
+    <Style x:Key="DarkTitleLabelStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="{StaticResource MonospaceFontFamily}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="Transparent" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+    </Style>
+
+    <!-- Background Gradient for Dark Retro Title - This can be set via code behind -->
+    <LinearGradientBrush x:Key="DarkTitleGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="{StaticResource DarkPrimaryColor}" Offset="0.25" />
+        <GradientStop Color="{StaticResource DarkAccentColor}" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <!-- Dark Theme UI Border Style -->
+    <Style x:Key="DarkBorderStyle" TargetType="Border">
+        <Setter Property="Stroke" Value="{StaticResource DarkBorderColor}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+    </Style>
+
+    <!-- Dark Theme Button Style -->
+    <Style x:Key="DarkButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkPrimaryColor}" />
+        <Setter Property="TextColor" Value="#222222" />
+        <Setter Property="FontFamily" Value="{StaticResource MonospaceFontFamily}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="15,10" />
+    </Style>
+
+    <!-- Dark Theme Secondary Button Style -->
+    <Style x:Key="DarkSecondaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkSurfaceColor}" />
+        <Setter Property="TextColor" Value="{StaticResource DarkPrimaryColor}" />
+        <Setter Property="BorderColor" Value="{StaticResource DarkPrimaryColor}" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="FontFamily" Value="{StaticResource MonospaceFontFamily}" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="15,10" />
+    </Style>
+
+    <!-- Dark Theme Card Style -->
+    <Style x:Key="DarkCardStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkSurfaceColor}" />
+        <Setter Property="BorderColor" Value="{StaticResource DarkBorderColor}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="HasShadow" Value="True" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <!-- Dark Theme List Item Style -->
+    <Style x:Key="DarkListItemStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkSurfaceColor}" />
+        <Setter Property="BorderColor" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="Margin" Value="0,4" />
+    </Style>
+
+    <!-- Dark Theme Input Style -->
+    <Style x:Key="DarkEntryStyle" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="#222222" />
+        <Setter Property="TextColor" Value="{StaticResource DarkTextPrimaryColor}" />
+        <Setter Property="PlaceholderColor" Value="#666666" />
+        <Setter Property="FontFamily" Value="{StaticResource MonospaceFontFamily}" />
+    </Style>
+
+    <!-- Dark Theme Game Message Style -->
+    <Style x:Key="DarkGameMessageFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="#344055" />
+        <Setter Property="BorderColor" Value="#4cc9f0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="Margin" Value="10,15" />
+        <Setter Property="HasShadow" Value="True" />
+    </Style>
+
+    <!-- Dark Theme Status Message Styles -->
+    <Style x:Key="DarkSuccessMessageFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="#285e34" />
+        <Setter Property="BorderColor" Value="#28a745" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="12,8" />
+    </Style>
+
+    <Style x:Key="DarkErrorMessageFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="#482633" />
+        <Setter Property="BorderColor" Value="#dc3545" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="12,8" />
+    </Style>
+
+    <!-- Dark Theme Placeholder Style -->
+    <Style x:Key="DarkPlaceholderLabelStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="#00ff41" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="Opacity" Value="0.9" />
+    </Style>
+
+    <!-- Dark Theme Loading Container Style -->
+    <Style x:Key="DarkLoadingFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="#333333" />
+        <Setter Property="BorderColor" Value="Transparent" />
+        <Setter Property="HasShadow" Value="True" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="20" />
+    </Style>
+
+    <!-- Dark Theme Error Container Style -->
+    <Style x:Key="DarkErrorContainerFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="#333333" />
+        <Setter Property="BorderColor" Value="#ff6b6b" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="HasShadow" Value="True" />
+    </Style>
+
+    <!-- Dark Theme Help Text Style -->
+    <Style x:Key="DarkHelpTextLabelStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="#adb5bd" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Opacity" Value="0.8" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0,15,0,0" />
+    </Style>
+</ResourceDictionary>

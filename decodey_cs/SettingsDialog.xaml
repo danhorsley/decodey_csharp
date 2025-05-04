@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Decodey.ViewModels"
+             x:Class="Decodey.Views.Dialogs.SettingsDialog"
+             Title="Settings"
+             BackgroundColor="#80000000">
+
+    <ContentPage.BindingContext>
+        <viewmodels:SettingsViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <Grid
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Margin="20">
+
+            <Frame
+                Style="{StaticResource ModalContainerStyle}"
+                MinimumWidthRequest="340"
+                WidthRequest="90%"
+                MaximumWidthRequest="600">
+
+                <ScrollView>
+                    <StackLayout Spacing="20">
+                        <Grid>
+                            <Label 
+                                Text="Settings" 
+                                Style="{StaticResource ModalTitleStyle}"
+                                HorizontalOptions="Center" />
+
+                            <Button 
+                                Text="×" 
+                                Style="{StaticResource ModalCloseButtonStyle}"
+                                Command="{Binding CloseCommand}"
+                                HorizontalOptions="End"
+                                VerticalOptions="Start" />
+                        </Grid>
+
+                        <!-- Theme Section -->
+                        <Frame Style="{StaticResource LightCardStyle}">
+                            <StackLayout Spacing="15">
+                                <Label Text="Appearance" FontAttributes="Bold" FontSize="16" />
+
+                                <!-- Theme Selection -->
+                                <StackLayout>
+                                    <Label Text="Theme" Margin="0,0,0,5" />
+                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                        <RadioButton 
+                                            Grid.Column="0"
+                                            Content="Light" 
+                                            GroupName="Theme"
+                                            IsChecked="{Binding IsLightTheme}"
+                                            CheckedChanged="OnThemeRadioButtonCheckedChanged" />
+
+                                        <RadioButton 
+                                            Grid.Column="1"
+                                            Content="Dark" 
+                                            GroupName="Theme"
+                                            IsChecked="{Binding IsDarkTheme}"
+                                            CheckedChanged="OnThemeRadioButtonCheckedChanged" />
+                                    </Grid>
+                                </StackLayout>
+
+                                <!-- Text Color Selection -->
+                                <StackLayout>
+                                    <Label Text="Text Color" Margin="0,0,0,5" />
+                                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                                        <RadioButton 
+                                            Grid.Column="0"
+                                            Content="Default" 
+                                            GroupName="TextColor"
+                                            IsChecked="{Binding IsDefaultTextColor}"
+                                            CheckedChanged="OnTextColorRadioButtonCheckedChanged" />
+
+                                        <RadioButton 
+                                            Grid.Column="1"
+                                            Content="Sci-Fi Blue" 
+                                            GroupName="TextColor"
+                                            IsChecked="{Binding IsScifiBlueTextColor}"
+                                            CheckedChanged="OnTextColorRadioButtonCheckedChanged" />
+
+                                        <RadioButton 
+                                            Grid.Column="2"
+                                            Content="Retro Green" 
+                                            GroupName="TextColor"
+                                            IsChecked="{Binding IsRetroGreenTextColor}"
+                                            CheckedChanged="OnTextColorRadioButtonCheckedChanged" />
+                                    </Grid>
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
+
+                        <!-- Game Settings Section -->
+                        <Frame Style="{StaticResource LightCardStyle}">
+                            <StackLayout Spacing="15">
+                                <Label Text="Game Settings" FontAttributes="Bold" FontSize="16" />
+
+                                <!-- Grid Sorting -->
+                                <StackLayout>
+                                    <Label Text="Letter Grid Sorting" Margin="0,0,0,5" />
+                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                        <RadioButton 
+                                            Grid.Column="0"
+                                            Content="As Appears in Text" 
+                                            GroupName="GridSorting"
+                                            IsChecked="{Binding IsDefaultGridSorting}"
+                                            CheckedChanged="OnGridSortingRadioButtonCheckedChanged" />
+
+                                        <RadioButton 
+                                            Grid.Column="1"
+                                            Content="Alphabetical" 
+                                            GroupName="GridSorting"
+                                            IsChecked="{Binding IsAlphabeticalGridSorting}"
+                                            CheckedChanged="OnGridSortingRadioButtonCheckedChanged" />
+                                    </Grid>
+                                </StackLayout>
+
+                                <!-- Game Mode Toggles -->
+                                <StackLayout>
+                                    <CheckBox 
+                                        IsChecked="{Binding IsHardcoreMode}" 
+                                        CheckedChanged="OnHardcoreModeCheckBoxCheckedChanged" />
+                                    <Label 
+                                        Text="Hardcore Mode (no spaces or punctuation)" 
+                                        VerticalOptions="Center" />
+
+                                    <Label 
+                                        Text="Makes the game more challenging by removing spacing and punctuation hints." 
+                                        FontSize="12" 
+                                        Opacity="0.7"
+                                        Margin="30,0,0,10" />
+
+                                    <CheckBox 
+                                        IsChecked="{Binding IsLongText}" 
+                                        CheckedChanged="OnLongTextCheckBoxCheckedChanged" />
+                                    <Label 
+                                        Text="Prefer Longer Quotes" 
+                                        VerticalOptions="Center" />
+
+                                    <Label 
+                                        Text="When enabled, the game will prioritize longer quotes for more challenge." 
+                                        FontSize="12" 
+                                        Opacity="0.7"
+                                        Margin="30,0,0,0" />
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
+
+                        <!-- Sound Settings Section -->
+                        <Frame Style="{StaticResource LightCardStyle}">
+                            <StackLayout Spacing="15">
+                                <Label Text="Sound" FontAttributes="Bold" FontSize="16" />
+
+                                <!-- Sound Enable Toggle -->
+                                <StackLayout Orientation="Horizontal">
+                                    <CheckBox 
+                                        IsChecked="{Binding IsSoundEnabled}" 
+                                        CheckedChanged="OnSoundEnabledCheckBoxCheckedChanged" />
+                                    <Label 
+                                        Text="Enable Sound Effects" 
+                                        VerticalOptions="Center" />
+                                </StackLayout>
+
+                                <!-- Volume Slider -->
+                                <StackLayout IsEnabled="{Binding IsSoundEnabled}">
+                                    <Label Text="Volume" />
+                                    <Slider 
+                                        Value="{Binding SoundVolume}" 
+                                        Minimum="0" 
+                                        Maximum="1" 
+                                        MinimumTrackColor="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"
+                                        ThumbColor="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"
+                                        ValueChanged="OnVolumeSliderValueChanged" />
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
+
+                        <!-- Account Section (for logged in users) -->
+                        <Frame Style="{StaticResource LightCardStyle}" IsVisible="{Binding IsAuthenticated}">
+                            <StackLayout Spacing="15">
+                                <Label Text="Account" FontAttributes="Bold" FontSize="16" />
+
+                                <!-- User Info -->
+                                <Label Text="{Binding UserDisplayText}" />
+
+                                <!-- Download My Data -->
+                                <Button 
+                                    Text="Download My Data" 
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding DownloadDataCommand}" />
+
+                                <!-- Delete Account (Danger) -->
+                                <Button 
+                                    Text="Delete Account" 
+                                    Style="{StaticResource DangerButtonStyle}"
+                                    Command="{Binding DeleteAccountCommand}" />
+
+                                <Label 
+                                    Text="Deleting your account will permanently erase all your data and cannot be undone." 
+                                    FontSize="12" 
+                                    Opacity="0.7"
+                                    TextColor="{AppThemeBinding Light=#dc3545, Dark=#E53935}" />
+                            </StackLayout>
+                        </Frame>
+
+                        <!-- Feedback Section -->
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="10">
+                            <Button 
+                                Text="Reset All Settings" 
+                                Style="{StaticResource DangerButtonStyle}"
+                                Command="{Binding ResetSettingsCommand}" />
+
+                            <Button 
+                                Text="Save" 
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                Command="{Binding SaveCommand}" />
+                        </StackLayout>
+                    </StackLayout>
+                </ScrollView>
+            </Frame>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

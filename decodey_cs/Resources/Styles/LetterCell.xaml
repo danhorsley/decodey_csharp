@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Decodey.Controls.LetterCell">
+    <ContentView.Resources>
+        <!-- Styles for the letter cell components -->
+        <Style x:Key="CellFrameStyle" TargetType="Frame">
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HasShadow" Value="True" />
+            <Setter Property="WidthRequest" Value="38" />
+            <Setter Property="HeightRequest" Value="38" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=White, Dark=#333333}" />
+            <Setter Property="BorderColor" Value="{AppThemeBinding Light=#dee2e6, Dark=#444444}" />
+        </Style>
+
+        <Style x:Key="LetterLabelStyle" TargetType="Label">
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Setter Property="VerticalTextAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="FrequencyLabelStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Opacity" Value="0.7" />
+            <Setter Property="HorizontalOptions" Value="End" />
+            <Setter Property="VerticalOptions" Value="End" />
+            <Setter Property="Margin" Value="0,0,2,1" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light=#6c757d, Dark=#adb5bd}" />
+        </Style>
+
+        <!-- Selection state styles -->
+        <Style x:Key="SelectedFrameStyle" TargetType="Frame" BasedOn="{StaticResource CellFrameStyle}">
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#007bff, Dark=#4cc9f0}" />
+            <Setter Property="BorderColor" Value="{AppThemeBinding Light=#0062cc, Dark=#3db8df}" />
+            <Setter Property="Scale" Value="1.05" />
+        </Style>
+
+        <Style x:Key="SelectedLabelStyle" TargetType="Label" BasedOn="{StaticResource LetterLabelStyle}">
+            <Setter Property="TextColor" Value="White" />
+        </Style>
+
+        <!-- Guessed state styles -->
+        <Style x:Key="GuessedFrameStyle" TargetType="Frame" BasedOn="{StaticResource CellFrameStyle}">
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#e9ecef, Dark=#222222}" />
+            <Setter Property="BorderColor" Value="{AppThemeBinding Light=#ced4da, Dark=#7a7a7a}" />
+        </Style>
+
+        <Style x:Key="GuessedLabelStyle" TargetType="Label" BasedOn="{StaticResource LetterLabelStyle}">
+            <Setter Property="TextColor" Value="{AppThemeBinding Light=#495057, Dark=#aaaaaa}" />
+        </Style>
+
+        <!-- Previously guessed state styles -->
+        <Style x:Key="PreviouslyGuessedFrameStyle" TargetType="Frame" BasedOn="{StaticResource CellFrameStyle}">
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=rgba(255,0,0,0.1), Dark=rgba(255,0,0,0.15)}" />
+            <Setter Property="BorderColor" Value="{AppThemeBinding Light=#ffcdd2, Dark=#aa0000}" />
+            <Setter Property="Opacity" Value="0.6" />
+        </Style>
+
+        <!-- Flash animation styles -->
+        <Style x:Key="FlashCorrectFrameStyle" TargetType="Frame" BasedOn="{StaticResource CellFrameStyle}">
+            <Setter Property="BackgroundColor" Value="#28a745" />
+            <Setter Property="BorderColor" Value="#218838" />
+        </Style>
+
+        <Style x:Key="FlashIncorrectFrameStyle" TargetType="Frame" BasedOn="{StaticResource CellFrameStyle}">
+            <Setter Property="BackgroundColor" Value="#dc3545" />
+            <Setter Property="BorderColor" Value="#bd2130" />
+        </Style>
+
+        <Style x:Key="FlashLabelStyle" TargetType="Label" BasedOn="{StaticResource LetterLabelStyle}">
+            <Setter Property="TextColor" Value="White" />
+        </Style>
+    </ContentView.Resources>
+
+    <Frame x:Name="CellFrame" Style="{StaticResource CellFrameStyle}">
+        <Grid>
+            <Label x:Name="LetterLabel" Style="{StaticResource LetterLabelStyle}" />
+            <Label x:Name="FrequencyLabel" Style="{StaticResource FrequencyLabelStyle}" IsVisible="False" />
+        </Grid>
+    </Frame>
+</ContentView>

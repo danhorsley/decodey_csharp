@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Decodey.Resources.Styles">
+
+    <!-- 
+    TextDisplayStyles.xaml - Styles for the encrypted/decrypted text display
+    Translated from TuneableTextDisplay.js, AdaptiveTextDisplay.css, and related styles
+    -->
+
+    <!-- Main text container frame -->
+    <Style x:Key="TextContainerFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=White, Dark=#333333}" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light=#dee2e6, Dark=#444444}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="HasShadow" Value="True" />
+        <Setter Property="Padding" Value="12,1" />
+        <Setter Property="Margin" Value="10,0" />
+        <Setter Property="WidthRequest" Value="-1" />
+        <!-- Auto width -->
+        <Setter Property="HorizontalOptions" Value="Fill" />
+    </Style>
+
+    <!-- Grid for the text display layout -->
+    <Style x:Key="TextDisplayGridStyle" TargetType="Grid">
+        <Setter Property="RowSpacing" Value="0" />
+        <Setter Property="ColumnSpacing" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+    </Style>
+
+    <!-- Style for text line blocks (each paragraph) -->
+    <Style x:Key="TextLineBlockStackStyle" TargetType="StackLayout">
+        <Setter Property="Orientation" Value="Vertical" />
+        <Setter Property="Spacing" Value="4" />
+        <Setter Property="Margin" Value="0,0,0,10" />
+    </Style>
+
+    <!-- Encrypted text line style -->
+    <Style x:Key="EncryptedLineStackStyle" TargetType="FlexLayout">
+        <Setter Property="Direction" Value="Row" />
+        <Setter Property="Wrap" Value="Wrap" />
+        <Setter Property="JustifyContent" Value="Center" />
+        <Setter Property="AlignItems" Value="Center" />
+        <Setter Property="AlignContent" Value="Center" />
+    </Style>
+
+    <!-- Encrypted text character style -->
+    <Style x:Key="EncryptedCharLabelStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="{StaticResource MonospaceFontFamily}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light=#495057, Dark={StaticResource DarkPrimaryColor}}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="LineBreakMode" Value="NoWrap" />
+        <Setter Property="LineHeight" Value="1.2" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0" />
+        <!-- Font size will be set dynamically based on available space -->
+    </Style>
+
+    <!-- Display (decrypted) text line style -->
+    <Style x:Key="DisplayLineStackStyle" TargetType="FlexLayout">
+        <Setter Property="Direction" Value="Row" />
+        <Setter Property="Wrap" Value="Wrap" />
+        <Setter Property="JustifyContent" Value="Center" />
+        <Setter Property="AlignItems" Value="Center" />
+        <Setter Property="AlignContent" Value="Center" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+
+    <!-- Display (decrypted) text character style -->
+    <Style x:Key="DisplayCharLabelStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="{StaticResource MonospaceFontFamily}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light=rgb(0,66,170), Dark={StaticResource DarkAccentColor}}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="LineBreakMode" Value="NoWrap" />
+        <Setter Property="LineHeight" Value="1.2" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0" />
+        <!-- Font size will be set dynamically based on available space -->
+    </Style>
+
+    <!-- Placeholder character style (█) -->
+    <Style x:Key="PlaceholderCharLabelStyle" TargetType="Label" BasedOn="{StaticResource DisplayCharLabelStyle}">
+        <!-- In dark theme, show placeholder in a highlight color -->
+        <Setter Property="TextColor" Value="{AppThemeBinding Light=#495057, Dark=#00ff41}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="Opacity" Value="{AppThemeBinding Light=1.0, Dark=0.9}" />
+    </Style>
+
+    <!-- Hardcore mode styles - more compact -->
+    <Style x:Key="HardcoreTextContainerFrameStyle" TargetType="Frame" BasedOn="{StaticResource TextContainerFrameStyle}">
+        <Setter Property="Padding" Value="10,1" />
+    </Style>
+
+    <!-- Badge for hardcore mode -->
+    <Style x:Key="HardcoreBadgeFrameStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#dc3545, Dark=#E53935}" />
+        <Setter Property="BorderColor" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="8,5" />
+        <Setter Property="HorizontalOptions" Value="End" />
+        <Setter Property="VerticalOptions" Value="Start" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="HasShadow" Value="True" />
+    </Style>
+
+    <Style x:Key="HardcoreBadgeLabelStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="LineHeight" Value="1" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <!-- Portrait (narrow screen) adaptations -->
+    <Style x:Key="PortraitTextContainerFrameStyle" TargetType="Frame" BasedOn="{StaticResource TextContainerFrameStyle}">
+        <Setter Property="Margin" Value="5,0" />
+        <Setter Property="Padding" Value="8,1" />
+    </Style>
+
+    <!-- Landscape (wide screen) adaptations -->
+    <Style x:Key="LandscapeTextContainerFrameStyle" TargetType="Frame" BasedOn="{StaticResource TextContainerFrameStyle}">
+        <Setter Property="Margin" Value="20,0" />
+        <Setter Property="MaxWidthRequest" Value="800" />
+    </Style>
+</ResourceDictionary>

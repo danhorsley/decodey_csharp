@@ -1,0 +1,714 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Decodey.Controls"
+             xmlns:viewmodels="clr-namespace:Decodey.ViewModels"
+             x:Class="Decodey.MainPage"
+             Title="Decodey">
+
+	<ContentPage.BindingContext>
+		<viewmodels:GameViewModel />
+	</ContentPage.BindingContext>
+
+	<Grid x:Name="RootGrid">
+		<!-- Define rows and columns for layout -->
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<!-- Header -->
+			<RowDefinition Height="Auto" />
+			<!-- Text Display -->
+			<RowDefinition Height="*" />
+			<!-- Game Grid -->
+			<RowDefinition Height="Auto" />
+			<!-- Bottom Controls -->
+		</Grid.RowDefinitions>
+
+		<!-- Matrix Background (only visible during loading/celebration) -->
+		<controls:MatrixRain Grid.RowSpan="4"
+                            IsActive="{Binding IsLoadingOrCelebrating}"
+                            Color="{Binding MatrixColor}"
+                            Message="{Binding MatrixMessage}"
+                            Density="50"
+                            Speed="1.0"
+                            IsVisible="{Binding IsLoadingOrCelebrating}" />
+
+		<!-- Header Bar -->
+		<Grid Grid.Row="0" Padding="15,10" BackgroundColor="{AppThemeBinding Light=White, Dark=#222222}">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+
+			<!-- Menu Button -->
+			<Button Grid.Column="0"
+                    Style="{StaticResource HeaderIconButtonStyle}"
+                    Text="☰"
+                    FontSize="24"
+                    Command="{Binding ToggleMenuCommand}" />
+
+			<!-- Game Title -->
+			<Label Grid.Column="1"
+                   Text="decodey"
+                   Style="{AppThemeBinding Light={StaticResource LightTitleLabelStyle}, Dark={StaticResource DarkTitleLabelStyle}}"
+                   HorizontalOptions="Center" />
+
+			<!-- Game Mode Indicators -->
+			<StackLayout Grid.Column="1" Orientation="Horizontal" HorizontalOptions="Center" Spacing="5">
+				<!-- Daily Challenge Badge (if applicable) -->
+				<Frame IsVisible="{Binding IsDailyChallenge}"
+                       BackgroundColor="{AppThemeBinding Light=#FF5722, Dark=#FF7043}"
+                       CornerRadius="4"
+                       Padding="5,2"
+                       Margin="0">
+					<Label Text="DAILY"
+                           TextColor="{AppThemeBinding Light=White, Dark=#222222}"
+                           FontSize="10"
+                           FontAttributes="Bold" />
+				</Frame>
+
+				<!-- Hardcore Mode Badge (if applicable) -->
+				<Frame IsVisible="{Binding IsHardcoreMode}"
+                       BackgroundColor="{AppThemeBinding Light=#dc3545, Dark=#E53935}"
+                       CornerRadius="4"
+                       Padding="5,2"
+                       Margin="0">
+					<Label Text="HARDCORE"
+                           TextColor="White"
+                           FontSize="10"
+                           FontAttributes="Bold" />
+				</Frame>
+			</StackLayout>
+
+			<!-- Settings Button -->
+			<Button Grid.Column="2"
+                    Style="{StaticResource HeaderIconButtonStyle}"
+                    Text="⚙"
+                    FontSize="24"
+                    Command="{Binding OpenSettingsCommand}" />
+		</Grid>
+
+		<!-- Text Display (Encrypted and Display Text) -->
+		<Frame Grid.Row="1"
+               Style="{AppThemeBinding Light={StaticResource TextContainerFrameStyle}, Dark={StaticResource TextContainerFrameStyle}}"
+               Margin="10,5">
+
+			<ScrollView>
+				<StackLayout Spacing="0">
+					<!-- Hardcore Mode Badge (if applicable) -->
+					<Frame IsVisible="{Binding IsHardcoreMode}"
+                           Style="{StaticResource HardcoreBadgeFrameStyle}"
+                           HorizontalOptions="End"
+                           VerticalOptions="Start"
+                           Margin="0,-15,-15,0">
+						<Label Text="HARDCORE" Style="{StaticResource HardcoreBadgeLabelStyle}" />
+					</Frame>
+
+					<!-- Text content - broken into paragraphs -->
+					<CollectionView ItemsSource="{Binding TextLines}">
+						<CollectionView.ItemTemplate>
+							<DataTemplate>
+								<StackLayout Style="{StaticResource TextLineBlockStackStyle}">
+									<!-- Encrypted Line -->
+									<FlexLayout Style="{StaticResource EncryptedLineStackStyle}"
+                                                BindableLayout.ItemsSource="{Binding EncryptedChars}">
+										<BindableLayout.ItemTemplate>
+											<DataTemplate>
+												<Label Text="{Binding}"
+                                                       Style="{StaticResource EncryptedCharLabelStyle}"
+                                                       FontSize="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:GameViewModel}}, Path=CharFontSize}" />
+											</DataTemplate>
+										</BindableLayout.ItemTemplate>
+									</FlexLayout>
+
+									<!-- Display Line -->
+									<FlexLayout Style="{StaticResource DisplayLineStackStyle}"
+                                                BindableLayout.ItemsSource="{Binding DisplayChars}">
+										<BindableLayout.ItemTemplate>
+											<DataTemplate>
+												<Label Text="{Binding Text}"
+                                                       Style="{StaticResource DisplayCharLabelStyle}"
+                                                       FontSize="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:GameViewModel}}, Path=CharFontSize}">
+													<Label.Triggers>
+														<!-- Change style for placeholder characters -->
+														<DataTrigger TargetType="Label"
+                                                                     Binding="{Binding IsPlaceholder}"
+                                                                     Value="True">
+															<Setter Property="Style" Value="{StaticResource PlaceholderCharLabelStyle}" />
+														</DataTrigger>
+													</Label.Triggers>
+												</Label>
+											</DataTemplate>
+										</BindableLayout.ItemTemplate>
+									</FlexLayout>
+								</StackLayout>
+							</DataTemplate>
+						</CollectionView.ItemTemplate>
+					</CollectionView>
+				</StackLayout>
+			</ScrollView>
+		</Frame>
+
+		<!-- Game Dashboard (Encrypted and Guess Grids) -->
+		<Grid Grid.Row="2" Padding="10,0">
+			<!-- Adapt layout based on orientation -->
+			<Grid.Resources>
+				<Style x:Key="PortraitLayout" TargetType="Grid">
+					<Setter Property="RowDefinitions">
+						<RowDefinitionCollection>
+							<RowDefinition Height="Auto" />
+							<!-- Encrypted Grid -->
+							<RowDefinition Height="Auto" />
+							<!-- Hint Button -->
+							<RowDefinition Height="Auto" />
+							<!-- Guess Grid -->
+						</RowDefinitionCollection>
+					</Setter>
+				</Style>
+				<Style x:Key="LandscapeLayout" TargetType="Grid">
+					<Setter Property="ColumnDefinitions">
+						<ColumnDefinitionCollection>
+							<ColumnDefinition Width="*" />
+							<!-- Encrypted Grid -->
+							<ColumnDefinition Width="Auto" />
+							<!-- Hint Button -->
+							<ColumnDefinition Width="*" />
+							<!-- Guess Grid -->
+						</ColumnDefinitionCollection>
+					</Setter>
+				</Style>
+			</Grid.Resources>
+
+			<!-- This will be set in code-behind based on orientation -->
+			<Grid x:Name="GameDashboardGrid">
+				<!-- Encrypted Letters Grid (left/top) -->
+				<Grid x:Name="EncryptedGrid"
+                      Style="{StaticResource EncryptedGridStyle}"
+                      BindableLayout.ItemsSource="{Binding EncryptedLetterRows}">
+					<Grid.RowDefinitions>
+						<!-- Will be dynamically created based on letter count -->
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<!-- Will be dynamically created based on letter count -->
+					</Grid.ColumnDefinitions>
+
+					<!-- Letter cells will be added dynamically -->
+				</Grid>
+
+				<!-- Hint Button (center) -->
+				<Frame x:Name="HintButtonFrame"
+                       Style="{Binding HintButtonStyle}"
+                       Padding="12,10"
+                       IsVisible="{Binding IsGameActive}">
+					<Frame.GestureRecognizers>
+						<TapGestureRecognizer Command="{Binding GetHintCommand}" />
+					</Frame.GestureRecognizers>
+
+					<StackLayout Spacing="2" HorizontalOptions="Center">
+						<Label Text="{Binding HintText}"
+                               Style="{StaticResource HintTextLabelStyle}" />
+						<Label Text="HINT"
+                               Style="{StaticResource HintLabelLabelStyle}" />
+
+						<!-- Pending Hint Indicator -->
+						<Frame IsVisible="{Binding IsHintInProgress}"
+                               Style="{StaticResource PendingHintIndicatorFrameStyle}">
+							<Label Text="{Binding PendingHints}"
+                                   Style="{StaticResource PendingHintLabelStyle}" />
+						</Frame>
+					</StackLayout>
+				</Frame>
+
+				<!-- Guess Letters Grid (right/bottom) -->
+				<Grid x:Name="GuessGrid"
+                      Style="{StaticResource GuessGridStyle}"
+                      BindableLayout.ItemsSource="{Binding GuessLetterRows}">
+					<Grid.RowDefinitions>
+						<!-- Will be dynamically created based on letter count -->
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<!-- Will be dynamically created based on letter count -->
+					</Grid.ColumnDefinitions>
+
+					<!-- Letter cells will be added dynamically -->
+				</Grid>
+
+				<!-- Game Over Message (when applicable) -->
+				<StackLayout IsVisible="{Binding HasGameEnded}"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center">
+					<Label Text="{Binding GameOverMessage}"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,10" />
+					<Button Text="Play Again"
+                            Command="{Binding StartNewGameCommand}"
+                            HorizontalOptions="Center" />
+				</StackLayout>
+			</Grid>
+		</Grid>
+
+		<!-- Bottom Buttons (Leaderboard, Daily Challenge) -->
+		<Grid Grid.Row="3" Padding="10">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<!-- Leaderboard Button -->
+			<Button Grid.Column="0"
+                    Style="{StaticResource LeaderboardButtonStyle}"
+                    Text="🏆"
+                    Command="{Binding OpenLeaderboardCommand}"
+                    HorizontalOptions="Start" />
+
+			<!-- Daily Challenge Button -->
+			<Button Grid.Column="1"
+                    Style="{StaticResource DailyChallengeButtonStyle}"
+                    Text="📅"
+                    Command="{Binding StartDailyChallengeCommand}"
+                    HorizontalOptions="End" />
+		</Grid>
+
+		<!-- Loading Overlay -->
+		<Grid Grid.RowSpan="4"
+              BackgroundColor="#80000000"
+              IsVisible="{Binding IsLoading}">
+			<StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+				<ActivityIndicator IsRunning="{Binding IsLoading}"
+                                  Color="{AppThemeBinding Light=#00ff41, Dark=#4cc9f0}"
+                                  WidthRequest="50"
+                                  HeightRequest="50" />
+				<Label Text="Loading puzzle..."
+                       TextColor="{AppThemeBinding Light=#00ff41, Dark=#4cc9f0}"
+                       FontFamily="{StaticResource MonospaceFontFamily}"
+                       Margin="0,20,0,0" />
+			</StackLayout>
+		</Grid>
+
+		<!-- Side Menu (Initially Hidden) -->
+		<Grid x:Name="SideMenu"
+              Grid.RowSpan="4"
+              BackgroundColor="{AppThemeBinding Light=#f5f5f5, Dark=#222222}"
+              WidthRequest="280"
+              HorizontalOptions="Start"
+              TranslationX="-280">
+			<!-- Initially hidden off-screen -->
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<!-- Header -->
+				<RowDefinition Height="Auto" />
+				<!-- User Info -->
+				<RowDefinition Height="*" />
+				<!-- Menu Items -->
+				<RowDefinition Height="Auto" />
+				<!-- Footer -->
+			</Grid.RowDefinitions>
+
+			<!-- Menu Header -->
+			<Grid Grid.Row="0" Padding="15"
+                  BackgroundColor="{AppThemeBinding Light={StaticResource LightSurfaceColor}, Dark={StaticResource DarkSurfaceColor}}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+
+				<Label Grid.Column="0"
+                       Text="Menu"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+
+				<Button Grid.Column="1"
+                        Text="×"
+                        FontSize="24"
+                        BackgroundColor="Transparent"
+                        Command="{Binding ToggleMenuCommand}" />
+			</Grid>
+
+			<!-- User Info Section -->
+			<StackLayout Grid.Row="1"
+                         Padding="15"
+                         BackgroundColor="{AppThemeBinding Light={StaticResource LightSurfaceColor}, Dark={StaticResource DarkSurfaceColor}}"
+                         Orientation="Horizontal"
+                         Spacing="10">
+
+				<Label Text="👤"
+                       FontSize="24"
+                       VerticalOptions="Center" />
+
+				<Label Text="{Binding UserDisplayName}"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+			</StackLayout>
+
+			<!-- Menu Items -->
+			<ScrollView Grid.Row="2">
+				<StackLayout Spacing="0">
+					<!-- Home -->
+					<Grid Padding="15,12" BackgroundColor="Transparent">
+						<Grid.GestureRecognizers>
+							<TapGestureRecognizer Command="{Binding NavigateToHomeCommand}" />
+						</Grid.GestureRecognizers>
+
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+
+						<Label Grid.Column="0" Text="🏠" FontSize="18" Margin="0,0,10,0" />
+						<Label Grid.Column="1" Text="Home" VerticalOptions="Center" />
+					</Grid>
+
+					<!-- Daily Challenge -->
+					<Grid Padding="15,12" BackgroundColor="Transparent">
+						<Grid.GestureRecognizers>
+							<TapGestureRecognizer Command="{Binding StartDailyChallengeCommand}" />
+						</Grid.GestureRecognizers>
+
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+
+						<Label Grid.Column="0" Text="📅" FontSize="18" Margin="0,0,10,0" />
+						<Label Grid.Column="1" Text="Daily Challenge" VerticalOptions="Center" />
+					</Grid>
+
+					<!-- Custom Game -->
+					<Grid Padding="15,12" BackgroundColor="Transparent">
+						<Grid.GestureRecognizers>
+							<TapGestureRecognizer Command="{Binding StartNewGameCommand}" />
+						</Grid.GestureRecognizers>
+
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+
+						<Label Grid.Column="0" Text="🎮" FontSize="18" Margin="0,0,10,0" />
+						<Label Grid.Column="1" Text="Custom Game" VerticalOptions="Center" />
+					</Grid>
+
+					<!-- Leaderboard -->
+					<Grid Padding="15,12" BackgroundColor="Transparent">
+						<Grid.GestureRecognizers>
+							<TapGestureRecognizer Command="{Binding OpenLeaderboardCommand}" />
+						</Grid.GestureRecognizers>
+
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+
+						<Label Grid.Column="0" Text="🏆" FontSize="18" Margin="0,0,10,0" />
+						<Label Grid.Column="1" Text="Leaderboard" VerticalOptions="Center" />
+					</Grid>
+
+					<!-- Settings -->
+					<Grid Padding="15,12" BackgroundColor="Transparent">
+						<Grid.GestureRecognizers>
+							<TapGestureRecognizer Command="{Binding OpenSettingsCommand}" />
+						</Grid.GestureRecognizers>
+
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+
+						<Label Grid.Column="0" Text="⚙️" FontSize="18" Margin="0,0,10,0" />
+						<Label Grid.Column="1" Text="Settings" VerticalOptions="Center" />
+					</Grid>
+
+					<!-- Tutorial -->
+					<Grid Padding="15,12" BackgroundColor="Transparent">
+						<Grid.GestureRecognizers>
+							<TapGestureRecognizer Command="{Binding StartTutorialCommand}" />
+						</Grid.GestureRecognizers>
+
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+
+						<Label Grid.Column="0" Text="📖" FontSize="18" Margin="0,0,10,0" />
+						<Label Grid.Column="1" Text="Tutorial" VerticalOptions="Center" />
+					</Grid>
+
+					<!-- About -->
+					<Grid Padding="15,12" BackgroundColor="Transparent">
+						<Grid.GestureRecognizers>
+							<TapGestureRecognizer Command="{Binding OpenAboutCommand}" />
+						</Grid.GestureRecognizers>
+
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+
+						<Label Grid.Column="0" Text="ℹ️" FontSize="18" Margin="0,0,10,0" />
+						<Label Grid.Column="1" Text="About" VerticalOptions="Center" />
+					</Grid>
+
+					<!-- Login/Logout (changes based on auth state) -->
+					<Grid Padding="15,12" BackgroundColor="Transparent">
+						<Grid.GestureRecognizers>
+							<TapGestureRecognizer Command="{Binding AuthActionCommand}" />
+						</Grid.GestureRecognizers>
+
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+
+						<Label Grid.Column="0"
+                               Text="{Binding AuthIcon}"
+                               FontSize="18"
+                               Margin="0,0,10,0" />
+						<Label Grid.Column="1"
+                               Text="{Binding AuthActionLabel}"
+                               VerticalOptions="Center" />
+					</Grid>
+				</StackLayout>
+			</ScrollView>
+
+			<!-- Menu Footer -->
+			<StackLayout Grid.Row="3"
+                         Padding="15,10"
+                         BackgroundColor="{AppThemeBinding Light={StaticResource LightSurfaceColor}, Dark={StaticResource DarkSurfaceColor}}">
+				<Label Text="{Binding AppVersion}"
+                       FontSize="12"
+                       TextColor="{AppThemeBinding Light={StaticResource LightSecondaryColor}, Dark={StaticResource DarkSecondaryColor}}"
+                       HorizontalOptions="Center" />
+			</StackLayout>
+		</Grid>
+
+		<!-- Menu Backdrop (when menu is open) -->
+		<BoxView Grid.RowSpan="4"
+                 BackgroundColor="#80000000"
+                 IsVisible="{Binding IsMenuOpen}">
+			<BoxView.GestureRecognizers>
+				<TapGestureRecognizer Command="{Binding ToggleMenuCommand}" />
+			</BoxView.GestureRecognizers>
+		</BoxView>
+
+		<!-- Win Celebration (Modal) -->
+		<ContentView Grid.RowSpan="4"
+                     IsVisible="{Binding ShowWinCelebration}"
+                     BackgroundColor="#B3000000">
+			<Frame Style="{StaticResource CelebrationFrameStyle}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Margin="20">
+
+				<StackLayout Spacing="15">
+					<!-- Status Header -->
+					<Label Text="{Binding WinStatusText}"
+                           Style="{StaticResource StatusTextLabelStyle}" />
+
+					<!-- Quote Display -->
+					<Frame Style="{StaticResource RetroQuoteFrameStyle}">
+						<StackLayout>
+							<Label Text="{Binding WinData.Display}"
+                                   Style="{StaticResource QuoteTextLabelStyle}" />
+
+							<Label Text="{Binding AttributionText}"
+                                   Style="{StaticResource QuoteAttributionLabelStyle}"
+                                   IsVisible="{Binding HasAttribution}" />
+						</StackLayout>
+					</Frame>
+
+					<!-- Stats Display -->
+					<StackLayout IsVisible="{Binding IsStatsCalculated}"
+                                 Style="{StaticResource StatRowStackStyle}">
+
+						<!-- Score -->
+						<Frame Style="{StaticResource StatItemFrameStyle}"
+                               HorizontalOptions="Center">
+							<Label Text="{Binding ScoreText}"
+                                   Style="{StaticResource ScoreStatLabelStyle}" />
+						</Frame>
+					</StackLayout>
+
+					<!-- Game Stats Grid -->
+					<Grid ColumnSpacing="10" RowSpacing="10" IsVisible="{Binding IsStatsCalculated}">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+						</Grid.RowDefinitions>
+
+						<!-- Time -->
+						<Frame Grid.Row="0" Grid.Column="0" Style="{StaticResource StatItemFrameStyle}">
+							<StackLayout>
+								<Label Text="TIME" FontSize="12" Opacity="0.7" />
+								<Label Text="{Binding TimeText}" Style="{StaticResource StatItemLabelStyle}" />
+							</StackLayout>
+						</Frame>
+
+						<!-- Mistakes -->
+						<Frame Grid.Row="0" Grid.Column="1" Style="{StaticResource StatItemFrameStyle}">
+							<StackLayout>
+								<Label Text="MISTAKES" FontSize="12" Opacity="0.7" />
+								<Label Text="{Binding MistakesText}" Style="{StaticResource StatItemLabelStyle}" />
+							</StackLayout>
+						</Frame>
+
+						<!-- Difficulty -->
+						<Frame Grid.Row="1" Grid.Column="0" Style="{StaticResource StatItemFrameStyle}">
+							<StackLayout>
+								<Label Text="DIFFICULTY" FontSize="12" Opacity="0.7" />
+								<Label Text="{Binding DifficultyText}" Style="{StaticResource StatItemLabelStyle}" />
+							</StackLayout>
+						</Frame>
+
+						<!-- Rating -->
+						<Frame Grid.Row="1" Grid.Column="1" Style="{StaticResource StatItemFrameStyle}">
+							<StackLayout>
+								<Label Text="RATING" FontSize="12" Opacity="0.7" />
+								<Label Text="{Binding RatingText}" Style="{StaticResource StatItemLabelStyle}" />
+							</StackLayout>
+						</Frame>
+					</Grid>
+
+					<!-- Daily Challenge Streak Info (if applicable) -->
+					<Frame IsVisible="{Binding IsDailyChallenge}"
+                           Style="{StaticResource StatItemFrameStyle}"
+                           Padding="15,10"
+                           Margin="0,5">
+						<StackLayout>
+							<Label Text="DAILY STREAK"
+                                   FontSize="12"
+                                   Opacity="0.7"
+                                   HorizontalTextAlignment="Center" />
+
+							<Grid ColumnSpacing="30" Margin="0,10,0,0">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+
+								<!-- Current Streak -->
+								<StackLayout Grid.Column="0">
+									<Label Text="CURRENT"
+                                           FontSize="10"
+                                           Opacity="0.7"
+                                           HorizontalTextAlignment="Center" />
+									<Label Text="{Binding CurrentStreakText}"
+                                           Style="{StaticResource StatItemLabelStyle}"
+                                           HorizontalTextAlignment="Center" />
+								</StackLayout>
+
+								<!-- Best Streak -->
+								<StackLayout Grid.Column="1">
+									<Label Text="BEST"
+                                           FontSize="10"
+                                           Opacity="0.7"
+                                           HorizontalTextAlignment="Center" />
+									<Label Text="{Binding BestStreakText}"
+                                           Style="{StaticResource StatItemLabelStyle}"
+                                           HorizontalTextAlignment="Center" />
+								</StackLayout>
+							</Grid>
+						</StackLayout>
+					</Frame>
+
+					<!-- Login Prompt (if not logged in) -->
+					<Frame IsVisible="{Binding ShouldShowLoginPrompt}"
+                           Style="{StaticResource StatItemFrameStyle}"
+                           Padding="15,10"
+                           BackgroundColor="{AppThemeBinding Light=rgba(255,217,102,0.1), Dark=rgba(255,217,102,0.1)}">
+						<StackLayout>
+							<Label Text="Create an account to save your score!"
+                                   TextColor="{AppThemeBinding Light=#ffd966, Dark=#ffd966}"
+                                   HorizontalTextAlignment="Center" />
+							<Button Text="Login / Sign Up"
+                                    Command="{Binding ShowLoginCommand}"
+                                    BackgroundColor="{AppThemeBinding Light=#ffd966, Dark=#ffd966}"
+                                    TextColor="Black"
+                                    Margin="0,10,0,0" />
+						</StackLayout>
+					</Frame>
+
+					<!-- Action Buttons -->
+					<StackLayout Style="{StaticResource GameOverActionsStackStyle}">
+						<Button Text="Play Again"
+                                Style="{StaticResource GameOverActionButtonStyle}"
+                                Command="{Binding StartNewGameCommand}" />
+
+						<Button Text="Share"
+                                Style="{StaticResource GameOverActionButtonStyle}"
+                                Command="{Binding ShareResultsCommand}" />
+
+						<Button Text="Home"
+                                Style="{StaticResource GameOverActionButtonStyle}"
+                                Command="{Binding NavigateToHomeCommand}" />
+					</StackLayout>
+				</StackLayout>
+			</Frame>
+		</ContentView>
+
+		<!-- Tutorial Overlay -->
+		<ContentView Grid.RowSpan="4"
+                     IsVisible="{Binding IsTutorialActive}">
+
+			<!-- Will be populated in code-behind based on tutorial step -->
+			<Grid BackgroundColor="#B3000000">
+				<!-- Tutorial backdrop -->
+
+				<!-- Tutorial highlight box -->
+				<Border x:Name="TutorialHighlight"
+                        IsVisible="False"
+                        Stroke="{AppThemeBinding Light=#ff3300, Dark=#ff7700}"
+                        StrokeThickness="3"
+                        StrokeShape="Rectangle"
+                        StrokeDashArray="2,2"
+                        BackgroundColor="Transparent">
+				</Border>
+
+				<!-- Tutorial instruction box -->
+				<Frame x:Name="TutorialBox"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#333333}"
+                       BorderColor="{AppThemeBinding Light=#dee2e6, Dark=#444444}"
+                       CornerRadius="8"
+                       Padding="15"
+                       WidthRequest="250"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center">
+
+					<StackLayout Spacing="15">
+						<Label x:Name="TutorialTitle"
+                               Text="Tutorial"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center" />
+
+						<Label x:Name="TutorialDescription"
+                               Text="Welcome to Decodey! This tutorial will guide you through the basics."
+                               HorizontalTextAlignment="Center" />
+
+						<StackLayout Orientation="Horizontal"
+                                     HorizontalOptions="FillAndExpand">
+							<Button Text="Skip"
+                                    Command="{Binding EndTutorialCommand}"
+                                    HorizontalOptions="StartAndExpand"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Padding="10,5" />
+
+							<Button Text="Next"
+                                    Command="{Binding NextTutorialStepCommand}"
+                                    HorizontalOptions="EndAndExpand"
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    Padding="10,5" />
+						</StackLayout>
+					</StackLayout>
+				</Frame>
+			</Grid>
+		</ContentView>
+	</Grid>
+</ContentPage>

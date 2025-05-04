@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Decodey.Resources.Styles">
+
+    <!-- 
+    BaseStyles.xaml - Core application styles and colors
+    Consolidating from original CSS color and base styling
+    -->
+
+    <!-- Light Theme Colors -->
+    <Color x:Key="LightBackgroundColor">#FFFFFF</Color>
+    <Color x:Key="LightSurfaceColor">#F8F9FA</Color>
+    <Color x:Key="LightPrimaryColor">#007BFF</Color>
+    <Color x:Key="LightSecondaryColor">#6C757D</Color>
+    <Color x:Key="LightAccentColor">#00A3FF</Color>
+    <Color x:Key="LightTextPrimaryColor">#212529</Color>
+    <Color x:Key="LightTextSecondaryColor">#495057</Color>
+    <Color x:Key="LightBorderColor">#DEE2E6</Color>
+    <Color x:Key="LightSuccessColor">#28A745</Color>
+    <Color x:Key="LightErrorColor">#DC3545</Color>
+    <Color x:Key="LightWarningColor">#FFC107</Color>
+    <Color x:Key="LightInfoColor">#17A2B8</Color>
+    <Color x:Key="LightMatrixColor">#00FF41</Color>
+
+    <!-- Dark Theme Colors -->
+    <Color x:Key="DarkBackgroundColor">#222222</Color>
+    <Color x:Key="DarkSurfaceColor">#333333</Color>
+    <Color x:Key="DarkPrimaryColor">#4CC9F0</Color>
+    <Color x:Key="DarkSecondaryColor">#6C757D</Color>
+    <Color x:Key="DarkAccentColor">#00ED99</Color>
+    <Color x:Key="DarkTextPrimaryColor">#F8F9FA</Color>
+    <Color x:Key="DarkTextSecondaryColor">#CED4DA</Color>
+    <Color x:Key="DarkBorderColor">#444444</Color>
+    <Color x:Key="DarkSuccessColor">#28A745</Color>
+    <Color x:Key="DarkErrorColor">#E53935</Color>
+    <Color x:Key="DarkWarningColor">#FF9E64</Color>
+    <Color x:Key="DarkInfoColor">#4CC9F0</Color>
+    <Color x:Key="DarkMatrixColor">#4CC9F0</Color>
+
+    <!-- Font Families -->
+    <x:String x:Key="MonospaceFontFamily">Courier New</x:String>
+    <x:String x:Key="PrimaryFontFamily">Courier New</x:String>
+    <x:String x:Key="SecondaryFontFamily">Arial</x:String>
+
+    <!-- Font Sizes -->
+    <x:Double x:Key="FontSizeSmall">12</x:Double>
+    <x:Double x:Key="FontSizeNormal">16</x:Double>
+    <x:Double x:Key="FontSizeMedium">18</x:Double>
+    <x:Double x:Key="FontSizeLarge">20</x:Double>
+    <x:Double x:Key="FontSizeExtraLarge">24</x:Double>
+    <x:Double x:Key="FontSizeHuge">32</x:Double>
+
+    <!-- Standard Spacing -->
+    <x:Double x:Key="SpacingTiny">2</x:Double>
+    <x:Double x:Key="SpacingSmall">4</x:Double>
+    <x:Double x:Key="SpacingMedium">8</x:Double>
+    <x:Double x:Key="SpacingRegular">12</x:Double>
+    <x:Double x:Key="SpacingLarge">16</x:Double>
+    <x:Double x:Key="SpacingExtraLarge">24</x:Double>
+
+    <!-- Corner Radius -->
+    <x:Double x:Key="CornerRadiusSmall">4</x:Double>
+    <x:Double x:Key="CornerRadiusMedium">8</x:Double>
+    <x:Double x:Key="CornerRadiusLarge">12</x:Double>
+
+    <!-- Base Page Style - Applied to all pages -->
+    <Style TargetType="ContentPage" x:Key="BasePageStyle">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightBackgroundColor}, Dark={StaticResource DarkBackgroundColor}}" />
+        <Setter Property="Padding" Value="20,40,20,20" />
+    </Style>
+
+    <!-- Base Label Style - Foundation for all text -->
+    <Style TargetType="Label" x:Key="BaseLabelStyle">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextPrimaryColor}, Dark={StaticResource DarkTextPrimaryColor}}" />
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeNormal}" />
+        <Setter Property="LineBreakMode" Value="WordWrap" />
+        <Setter Property="LineHeight" Value="1.4" />
+    </Style>
+
+    <!-- Base Button Style - Foundation for all buttons -->
+    <Style TargetType="Button" x:Key="BaseButtonStyle">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeNormal}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMedium}" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="MinimumHeightRequest" Value="40" />
+        <Setter Property="MinimumWidthRequest" Value="80" />
+    </Style>
+
+    <!-- Base Frame Style - Used for cards and containers -->
+    <Style TargetType="Frame" x:Key="BaseFrameStyle">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurfaceColor}, Dark={StaticResource DarkSurfaceColor}}" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource LightBorderColor}, Dark={StaticResource DarkBorderColor}}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMedium}" />
+        <Setter Property="HasShadow" Value="True" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <!-- Base Entry Style - Used for input fields -->
+    <Style TargetType="Entry" x:Key="BaseEntryStyle">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurfaceColor}, Dark={StaticResource DarkSurfaceColor}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextPrimaryColor}, Dark={StaticResource DarkTextPrimaryColor}}" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource LightSecondaryColor}, Dark={StaticResource DarkSecondaryColor}}" />
+        <Setter Property="FontFamily" Value="{StaticResource PrimaryFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeNormal}" />
+    </Style>
+
+    <!-- Grid Styles - Base for layout grids -->
+    <Style TargetType="Grid" x:Key="BaseGridStyle">
+        <Setter Property="RowSpacing" Value="{StaticResource SpacingMedium}" />
+        <Setter Property="ColumnSpacing" Value="{StaticResource SpacingMedium}" />
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,41 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Decodey"
+             x:Class="Decodey.App">
+	<Application.Resources>
+		<ResourceDictionary>
+			<!-- Include all resource dictionaries -->
+			<ResourceDictionary.MergedDictionaries>
+				<!-- Base styles must come first -->
+				<ResourceDictionary Source="/Resources/Styles/BaseStyles.xaml" />
+
+				<!-- Theme-specific styles -->
+				<ResourceDictionary Source="/Resources/Styles/LightTheme.xaml" />
+				<ResourceDictionary Source="/Resources/Styles/DarkTheme.xaml" />
+
+				<!-- Component styles -->
+				<ResourceDictionary Source="/Resources/Styles/LetterGridStyles.xaml" />
+				<ResourceDictionary Source="/Resources/Styles/TextDisplayStyles.xaml" />
+				<ResourceDictionary Source="/Resources/Styles/DialogStyles.xaml" />
+				<ResourceDictionary Source="/Resources/Styles/ButtonStyles.xaml" />
+				<ResourceDictionary Source="/Resources/Styles/AnimationStyles.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+
+			<!-- Set default styles for common elements -->
+			<Style TargetType="ContentPage" BasedOn="{StaticResource BasePageStyle}" />
+			<Style TargetType="Label" BasedOn="{StaticResource BaseLabelStyle}" />
+			<Style TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}" />
+			<Style TargetType="Frame" BasedOn="{StaticResource BaseFrameStyle}" />
+			<Style TargetType="Entry" BasedOn="{StaticResource BaseEntryStyle}" />
+			<Style TargetType="Grid" BasedOn="{StaticResource BaseGridStyle}" />
+
+			<!-- Define app-wide converters -->
+			<local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+			<local:InverseBoolConverter x:Key="InverseBoolConverter" />
+			<local:StringToUpperConverter x:Key="StringToUpperConverter" />
+			<local:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+			<local:TextColorConverter x:Key="TextColorConverter" />
+		</ResourceDictionary>
+	</Application.Resources>
+</Application>
