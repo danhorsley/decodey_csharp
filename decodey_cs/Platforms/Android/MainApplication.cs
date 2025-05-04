@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace decodey_cs;
+namespace Decodeys;
 
 [Application]
 public class MainApplication : MauiApplication
